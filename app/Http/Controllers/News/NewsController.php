@@ -15,7 +15,8 @@ class NewsController extends Controller
      */
     public function index()
     {
-        //
+        clock(News::getCountNews(10));
+        return view('news.index', ['news' => News::getCountNews(10)]);
     }
 
     /**
