@@ -35,13 +35,13 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="/news/cat">{{ __('Категории') }}</a>
+                            <a class="nav-link" href="/">{{ __('Главная') }}</a>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ __('Новости') }}</a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/news">Все новости</a></li>
-                                <li><a class="dropdown-item" href="/news/create">Добавить новость</a></li>
+                                <li><a class="dropdown-item" href="/news">{{ __('Категории новостей') }}</a></li>
+                                <li><a class="dropdown-item" href="/news/create">{{ __('Добавить новость') }}</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -91,7 +91,7 @@
             @yield('content')
         </main>
     </div>
-<footer class="row justify-content-center fixed-bottom">
+<footer class="container-fluid row justify-content-center fixed-bottom footer">
     <?php
     $start_Year = "2021";
     $this_Year = date('Y');

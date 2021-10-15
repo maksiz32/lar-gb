@@ -13,10 +13,23 @@ class NewsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function categories()
     {
-        clock(News::getCountNews(10));
-        return view('news.index', ['news' => News::getCountNews(10)]);
+        return view('news.index', ['categories' => News::getAllCategories()]);
+    }
+
+    public function oneCategory(string $category)
+    {
+        $news = News::getNewsByCategory($category);
+        $catName = $news[0]['category'];
+
+        return view('news.cat', ['news' => $news, 'catName' => $catName]);
+    }
+
+    public function showOne(int $id)
+    {
+        //
+        return view('news.one', ['news' => News::oneNews($id)]);
     }
 
     /**
@@ -26,7 +39,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        //
+        return view('news.input', ['categories' => News::getAllCategories()]);
     }
 
     /**
@@ -37,19 +50,10 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Здесь добавление новостей
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\News  $news
-     * @return \Illuminate\Http\Response
-     */
-    public function show(News $news)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.

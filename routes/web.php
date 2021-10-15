@@ -27,7 +27,10 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::prefix('/news')->group(
     function () {
-        Route::get('/', [NewsController::class, 'index']);
-        Route::get('/cat', [NewsController::class, 'categories']);
+        Route::get('/', [NewsController::class, 'categories']);
+        Route::get('/cat/{id}', [NewsController::class, 'oneCategory']);
+        Route::get('/one/{id}', [NewsController::class, 'showOne']);
+        Route::get('/create', [NewsController::class, 'create'])->name('news.input');
+        Route::post('/save', [NewsController::class, 'store']);
     }
 );
