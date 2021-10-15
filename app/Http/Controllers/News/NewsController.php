@@ -52,7 +52,7 @@ class NewsController extends Controller
     {
         // Здесь добавление новостей
     }
-    
+
 
     /**
      * Show the form for editing the specified resource.
