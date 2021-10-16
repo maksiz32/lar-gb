@@ -2,6 +2,11 @@
 @section('title', "Новости из категории $catName")
 
 @section('content')
+    @empty($news)
+        <div class="alert alert-warning" role="alert">
+            Нет записей в данной категории
+        </div>
+    @endempty
     <div class="container lar-main">
         <div class="row justify-content-center">
             @foreach($news as $one)
