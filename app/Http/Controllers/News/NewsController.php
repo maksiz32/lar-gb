@@ -50,7 +50,14 @@ class NewsController extends Controller
      */
     public function store(Request $request)
     {
-        // Здесь добавление новостей
+        $validated = $request->validate(
+            [
+                'categories' => 'required|string',
+                'title' => 'required|string',
+                'textNews' => 'required|string',
+            ]
+        );
+        // Далее логика
     }
 
 

@@ -30,7 +30,7 @@ Route::prefix('/news')->group(
         Route::get('/', [NewsController::class, 'categories']);
         Route::get('/cat/{id}', [NewsController::class, 'oneCategory']);
         Route::get('/one/{id}', [NewsController::class, 'showOne']);
-        Route::get('/create', [NewsController::class, 'create'])->name('news.input');
-        Route::post('/save', [NewsController::class, 'store']);
+        Route::get('/create', [NewsController::class, 'create']);
+        Route::post('/save', [NewsController::class, 'store'])->name('news.input');
     }
 );
