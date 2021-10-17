@@ -11298,6 +11298,8 @@ textarea.form-control-lg {
     background-color: #7c7f83;
     min-height: 3rem;
     align-content: center;
+    color: #fff;
+    font-weight: bolder;
 }
 
 .hovered:hover {
