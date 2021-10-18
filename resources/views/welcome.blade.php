@@ -4,6 +4,11 @@
 @section('content')
     <div class="container lar-main">
         <div class="row justify-content-center">
+            @isset($message)
+                <div class="alert alert-success mt-3 mb-3">
+                    {{ $message }}
+                </div>
+            @endisset
             <h1>Laravel. Глубокое погружение</h1>
         </div>
         <div class="justify-content-end align-bottom lar-main__name">

@@ -37,7 +37,7 @@
                     >
                 </div>
                 <div class="form-group">
-                    <label for="textNews" class="col-md-4 control-label">Дата создания:</label>
+                    <label for="textNews" class="col-md-4 control-label">Текст:</label>
                     <textarea
                         type="text"
                         id="textNews"
