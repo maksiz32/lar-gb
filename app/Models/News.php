@@ -11,6 +11,18 @@ class News extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['title', 'text', 'author'];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function source()
+    {
+        return $this->belongsTo(Source::class);
+    }
+
     public static function getCountNews(int $countNews): array
     {
         return (new FactoryNews())->getAllNews($countNews);

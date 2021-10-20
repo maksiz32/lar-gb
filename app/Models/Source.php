@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Source extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['name', 'path'];
+
+    public function news()
+    {
+        return $this->hasMany(News::class);
+    }
 }
