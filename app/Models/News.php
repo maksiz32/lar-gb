@@ -23,40 +23,21 @@ class News extends Model
         return $this->belongsTo(Source::class);
     }
 
-    public static function getCountNews(int $countNews): array
+    public static function getNewsByCategory(int $id)
     {
-        return (new FactoryNews())->getAllNews($countNews);
+        /** @var Category $cat */
+        $cat = Category::query()->find($id);
+        $result = $cat->news()->get();
+
+        return [
+            'news' => $result,
+            'catName' => $cat->category,
+            ];
     }
 
-    public static function getAllCategories(): array
+    public static function oneNews(int $id)
     {
-        return (new FactoryNews())->getCategories();
-    }
-
-    public static function getNewsByCategory(string $nameCategory): array
-    {
-        $result = [];
-        $arrNews = self::getCountNews(20);
-
-        $result = array_filter($arrNews, function($i) use ($nameCategory) {
-            if ($i['category'] === $nameCategory) {
-                return $i;
-            }
-        });
-        $result = array_values($result);
-        return $result;
-    }
-
-    public static function oneNews(int $id): array
-    {
-        $arrNews = self::getCountNews(20);
-
-        $result = array_filter($arrNews, function($i) use ($id) {
-            if ($i['id'] === $id) {
-                return $i;
-            }
-        });
-        $result = array_values($result);
+        $result = self::query()->find($id);
 
         return $result;
     }

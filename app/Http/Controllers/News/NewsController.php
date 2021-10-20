@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\News;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\News;
 use Illuminate\Http\Request;
 
@@ -15,20 +16,21 @@ class NewsController extends Controller
      */
     public function categories()
     {
-        return view('news.index', ['categories' => News::getAllCategories()]);
+        return view('news.index', ['categories' => Category::getAllCategories()]);
     }
 
-    public function oneCategory(string $category)
+    public function oneCategory(int $id)
     {
-        $news = News::getNewsByCategory($category);
-        $catName = $news[0]['category'];
+        $result = News::getNewsByCategory($id);
+        $news = $result['news'];
+        $catName = $result['catName'];
 
         return view('news.cat', ['news' => $news, 'catName' => $catName]);
+//        return view('news.cat', [...$result]);
     }
 
     public function showOne(int $id)
     {
-        //
         return view('news.one', ['news' => News::oneNews($id)]);
     }
 
@@ -39,7 +41,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('news.input', ['categories' => News::getAllCategories()]);
+        return view('news.input', ['categories' => Category::getAllCategories()]);
     }
 
     /**
