@@ -38,9 +38,7 @@ Route::prefix('/news')->group(
 );
 Route::prefix('/feedback')->group(
     function () {
-        Route::get('/', function () {
-            return view('feedback.input');
-        });
+        Route::get('/{id?}', [FeedbackController::class, 'input']);
         Route::post('/save', [FeedbackController::class, 'save'])->name('feedback.save');
     }
 );
