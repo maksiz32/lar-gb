@@ -9,6 +9,7 @@
     @endempty
     <div class="container lar-main">
         <div class="row justify-content-center">
+            <h2>{{ __("Новости в категории $catName") }}</h2>
             @foreach($news as $one)
                 <a href="{{ url('/news/one/' . $one->id) }}" class="text-decoration-none">
                     <div class="card m-2 hovered">

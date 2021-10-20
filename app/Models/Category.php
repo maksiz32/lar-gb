@@ -18,6 +18,6 @@ class Category extends Model
 
     public static function getAllCategories()
     {
-        return self::query()->get();
+        return self::all();
     }
 }
