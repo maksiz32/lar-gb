@@ -66,12 +66,15 @@ class NewsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\News  $news
+     * @param \App\Models\News $news
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function edit(News $news)
+    public function edit(Request $request)
     {
-        //
+        $news = News::query()->find((int) $request['id']);
+        $categories = Category::all();
+        return view('news.input', ['news' => $news, 'categories' => $categories]);
     }
 
     /**

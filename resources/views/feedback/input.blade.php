@@ -7,6 +7,9 @@
             <div class="col-md-8">
                 <form action="{{ route('feedback.save') }}" method="POST">
                     {{ csrf_field() }}
+                    @isset($id)
+                    <input type="text" value="{{ $id }}" hidden>
+                    @endisset
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -23,10 +26,7 @@
                             id="user_name"
                             class="form-control"
                             name="user_name"
-                            value="
-                            @isset($userName)
-                                {{$userName}}
-                            @endisset
+                            value="@isset($feedback->user_name){{ $feedback->user_name }}@endisset
                                 {{old('user_name')}}
                                 "
                             required
@@ -40,10 +40,7 @@
                                 class="form-control"
                                 name="comment"
                                 required
-                                value="
-                                @isset($comment)
-                                    {{$comment}}
-                                @endisset
+                                value="@isset($feedback->comment){{$feedback->comment}}@endisset
                                     {{old('comment')}}"
                             >
                         </div>

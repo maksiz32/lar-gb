@@ -21,7 +21,12 @@
                     <select name="categories" required>
                         <option disabled>Тип объекта:</option>
                         @foreach($categories as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->category }}</option>
+                            <option
+                                value="{{ $cat->id }}"
+                                @isset($news)
+                                {{ $news->category_id === $cat->id ? 'selected' : ''}}
+                                @endisset
+                            >{{ $cat->category }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -32,7 +37,8 @@
                         id="title"
                         class="form-control"
                         name="title"
-                        value="{{old('title')}}"
+                        value="@isset($news->title){{$news->title}}@endisset
+                        {{old('title')}}"
                         required
                     >
                 </div>
@@ -44,7 +50,7 @@
                         class="form-control"
                         name="textNews"
                         required
-                    >
+                    >@isset($news->text){{$news->text}}@endisset
                         {{old('textNews')}}
                     </textarea>
                 </div>

@@ -10,6 +10,17 @@
                     <p class="card-text">
                         {{ $news->text }}
                     </p>
+                    <div class="card-footer">
+                        <a
+                            class="btn btn-dark"
+                            href="{{ url('/news/edit/' . $news->id) }}"
+                        >
+                            Редактировать
+                        </a>
+                        <a class="btn btn-light" style="border: 1px solid black" href="#">
+                            Удалить
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

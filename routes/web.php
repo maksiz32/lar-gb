@@ -32,13 +32,16 @@ Route::prefix('/news')->group(
         Route::get('/', [NewsController::class, 'categories']);
         Route::get('/cat/{id}', [NewsController::class, 'oneCategory']);
         Route::get('/one/{id}', [NewsController::class, 'showOne']);
+        Route::get('/edit/{id}', [NewsController::class, 'edit']);
+        Route::get('/delete/{id}', [NewsController::class, 'remove']);
         Route::get('/create', [NewsController::class, 'create']);
         Route::post('/save', [NewsController::class, 'store'])->name('news.input');
     }
 );
 Route::prefix('/feedback')->group(
     function () {
-        Route::get('/{id?}', [FeedbackController::class, 'input']);
+        Route::get('/all', [FeedbackController::class, 'list']);
+        Route::get('/input/{id?}', [FeedbackController::class, 'input']);
         Route::post('/save', [FeedbackController::class, 'save'])->name('feedback.save');
     }
 );
