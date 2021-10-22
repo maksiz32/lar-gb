@@ -7,6 +7,7 @@
         <div class="col-md-8">
             <form action="{{ route('news.input') }}" method="POST">
                 {{ csrf_field() }}
+                <input type="hidden" name="id" value="@isset($news->id){{$news->id}}@endisset{{old('id')}}">
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -37,8 +38,7 @@
                         id="title"
                         class="form-control"
                         name="title"
-                        value="@isset($news->title){{$news->title}}@endisset
-                        {{old('title')}}"
+                        value="@isset($news->title){{$news->title}}@endisset{{old('title')}}"
                         required
                     >
                 </div>
@@ -50,9 +50,39 @@
                         class="form-control"
                         name="textNews"
                         required
-                    >@isset($news->text){{$news->text}}@endisset
-                        {{old('textNews')}}
+                    >@isset($news->text){{$news->text}}@endisset{{old('textNews')}}
                     </textarea>
+                </div>
+                <div class="form-group">
+                    <label for="author" class="col-md-4 control-label">Автор:</label>
+                    <input
+                        type="text"
+                        id="author"
+                        class="form-control"
+                        name="author"
+                        value="@isset($news->author){{$news->author}}@endisset{{old('author')}}"
+                        required
+                    >
+                </div>
+                <div class="form-group">
+                    <input type="hidden" name="sourceId" value="@isset($news->source->id){{$news->source->id}}@endisset{{old('sourceId')}}">
+                    <label for="sourceName" class="col-md-4 control-label">Источник новостей:</label>
+                    <input
+                        type="text"
+                        id="sourceName"
+                        class="form-control"
+                        name="sourceName"
+                        value="@isset($news->source->name){{$news->source->name}}@endisset{{old('sourceName')}}"
+                        required
+                    >
+                    <input
+                        type="text"
+                        id="sourcePath"
+                        class="form-control"
+                        name="sourcePath"
+                        value="@isset($news->source->path){{$news->source->path}}@else{{__('http://lar-gb')}}@endisset"
+                        required
+                    >
                 </div>
                 <div class="btn-group mt-2">
                     <button type="submit" class="btn btn-primary">

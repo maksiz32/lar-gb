@@ -2,6 +2,11 @@
 @section('title', "Новости из категории $catName")
 
 @section('content')
+    @isset($message)
+        <div class="alert alert-success mt-3 mb-3">
+            {!! $message !!}
+        </div>
+    @endisset
     @empty($news)
         <div class="alert alert-warning" role="alert">
             Нет записей в данной категории

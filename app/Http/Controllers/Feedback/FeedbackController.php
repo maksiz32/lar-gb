@@ -5,15 +5,16 @@ namespace App\Http\Controllers\Feedback;
 use App\Http\Controllers\Controller;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+//use Illuminate\Support\Facades\Storage;
 
 class FeedbackController extends Controller
 {
     public function input(Request $request)
     {
         $id = $request->id ?? null;
+
         /** @var Feedback $feedback */
-        $feedback = Feedback::query()->find((int)$id);
+        $feedback = Feedback::find((int)$id);
         return view('feedback.input', ['feedback' => $feedback]);
     }
 
@@ -21,7 +22,7 @@ class FeedbackController extends Controller
     {
         $validated = $request->validate(
             [
-                'id' => 'integer|exist:id',
+                'id' => 'integer|exists:feedbacks,id',
                 'user_name' => 'required|string',
                 'comment' => 'required|string',
             ]
@@ -31,7 +32,7 @@ class FeedbackController extends Controller
             $feed->user_name = $validated['user_name'];
             $feed->comment = $validated['comment'];
         } else {
-            $feed = Feedback::query()->find($validated['id']);
+            $feed = Feedback::find($validated['id']);
             $feed->fill($validated);
         }
         $feed->save();

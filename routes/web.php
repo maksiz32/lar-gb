@@ -33,7 +33,7 @@ Route::prefix('/news')->group(
         Route::get('/cat/{id}', [NewsController::class, 'oneCategory']);
         Route::get('/one/{id}', [NewsController::class, 'showOne']);
         Route::get('/edit/{id}', [NewsController::class, 'edit']);
-        Route::get('/delete/{id}', [NewsController::class, 'remove']);
+        Route::get('/delete/{id}', [NewsController::class, 'destroy']);
         Route::get('/create', [NewsController::class, 'create']);
         Route::post('/save', [NewsController::class, 'store'])->name('news.input');
     }
