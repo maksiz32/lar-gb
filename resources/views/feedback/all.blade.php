@@ -2,6 +2,11 @@
 @section('title', "Все отзывы")
 
 @section('content')
+    @isset($message)
+        <div class="alert alert-success mt-3 mb-3">
+            {!! $message !!}
+        </div>
+    @endisset
     @empty($feedbacks)
         <div class="alert alert-warning" role="alert">
             Отзывов пока нет

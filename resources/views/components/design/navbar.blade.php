@@ -40,7 +40,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/feedback/input">{{ __('Добавить отзыв / комментарий') }}</a></li>
-                        <li><a class="dropdown-item" href="/feedback/all">{{ __('Все отзывы') }}</a></li>
+                        <li><a class="dropdown-item" href="/feedback/">{{ __('Все отзывы') }}</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">

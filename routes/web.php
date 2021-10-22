@@ -40,8 +40,11 @@ Route::prefix('/news')->group(
 );
 Route::prefix('/feedback')->group(
     function () {
-        Route::get('/all', [FeedbackController::class, 'list']);
+        Route::get('/', [FeedbackController::class, 'list']);
+        Route::get('/show/{id}', [FeedbackController::class, 'show']);
+        Route::get('/edit/{id}', [FeedbackController::class, 'input']);
         Route::get('/input/{id?}', [FeedbackController::class, 'input']);
+        Route::get('/delete/{id}', [FeedbackController::class, 'destroy']);
         Route::post('/save', [FeedbackController::class, 'save'])->name('feedback.save');
     }
 );

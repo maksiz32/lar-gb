@@ -95,10 +95,9 @@ class NewsController extends Controller
             'source_id' => $source_id,
         ]);
         $news->save();
-        $newsRes = News::query()->where('category_id', $category->id)->get();
 
-        return view('news.cat', ['news' => $newsRes, 'catName' => $category->category])
-        ->with(['message' => 'Новость <strong>' . $validated['title'] . '</strong>' . $text]);
+        return redirect(action([__CLASS__, 'oneCategory'], ['id' => $category->id]))
+            ->with(['message' => 'Новость <strong>' . $validated['title'] . '</strong>' . $text]);
     }
 
     /**
@@ -127,12 +126,8 @@ class NewsController extends Controller
         $title = $news->title;
         $catId = $news->category_id;
         $news->delete();
-        $result = News::getNewsByCategory($catId);
 
-        $newsRes = $result['news'];
-        $catName = $result['catName'];
-
-        return view('news.cat', ['news' => $newsRes, 'catName' => $catName])
+        return redirect(action([__CLASS__, 'oneCategory'], ['id' => $catId]))
             ->with(['message' => "Новость <strong>$title</strong> удалена"]);
     }
 }

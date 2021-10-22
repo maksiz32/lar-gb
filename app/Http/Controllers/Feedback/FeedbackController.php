@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Feedback;
 use App\Http\Controllers\Controller;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
-//use Illuminate\Support\Facades\Storage;
 
 class FeedbackController extends Controller
 {
@@ -27,21 +26,40 @@ class FeedbackController extends Controller
                 'comment' => 'required|string',
             ]
         );
+        $text = '';
         if(!isset($validated['id'])) {
             $feed = new Feedback();
-            $feed->user_name = $validated['user_name'];
-            $feed->comment = $validated['comment'];
+            $text = 'добавлен';
         } else {
             $feed = Feedback::find($validated['id']);
-            $feed->fill($validated);
+            $text = 'изменён';
         }
+        $feed->user_name = $validated['user_name'];
+        $feed->comment = $validated['comment'];
         $feed->save();
 
-        return view('welcome')->with(['message' => "Отзыв добавлен"]);
+        return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
+            ->with(['message' => "Отзыв от {$feed->user_name} {$text}"]);
     }
 
     public function list()
     {
         return view('feedback.all', ['feedbacks' => Feedback::all()]);
+    }
+
+    public function show($id)
+    {
+        $feedback = Feedback::query()->findOrFail((int) $id);
+        return view('feedback.one', ['feedback' => $feedback]);
+    }
+
+    public function destroy($id)
+    {
+        $feedback = Feedback::query()->findOrFail((int) $id);
+        $name = $feedback->user_name;
+        $feedback->delete();
+
+        return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
+            ->with(['message' => "Отзыв от <strong>$name</strong> удалён"]);
     }
 }

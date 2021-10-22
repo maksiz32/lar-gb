@@ -27,7 +27,7 @@
         <main class="py-4">
             @yield('content')
         </main>
+        <x-design.footer></x-design.footer>
     </div>
-    <x-design.footer></x-design.footer>
 </body>
 </html>
