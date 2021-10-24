@@ -1,40 +1,44 @@
 @extends('layouts.app')
-@section('title', "Категории новостей")
+@section('title', "Все заказы")
 
 @section('content')
     <div class="container lar-main">
         <div class="row justify-content-center">
-            @empty($categories)
+            @empty($orders)
                 <div class="alert alert-warning" role="alert">
-                    Категории не созданы
+                    Заказов пока нет
                 </div>
             @else
             <div class="row">
-                {{ $categories->links() }}
+                {{ $orders->links() }}
             </div>
             <table class="table table-hover text-start">
                 <thead>
                     <tr>
-                        <th scope="col" style="width: 80%">Категория</th>
+                        <th scope="col" style="width: 25%">Инфо</th>
+                        <th scope="col" style="width: 55%">Заказ</th>
                         <th scope="col">Редактировать</th>
                         <th scope="col">Удалить</th>
                     </tr>
                 </thead>
                 <tbody>
-            @foreach($categories as $cat)
+            @foreach($orders as $order)
                     <tr>
                         <td>
-                            <a href="{{ url('/news/cat/' . $cat->id) }}" class="text-decoration-none">
-                                <div>{{ $cat->category }}</div>
-                            </a>
+                            <div>{{ $order->name }}</div>
+                            <div>{{ $order->phone }}</div>
+                            <div>{{ $order->email }}</div>
                         </td>
                         <td>
-                            <a href="{{ '/categories/edit/' . $cat->id }}">
+                            <div>{{ $order->order }}</div>
+                        </td>
+                        <td>
+                            <a href="{{ '/order/edit/' . $order->id }}">
                             Редактировать
                             </a>
                         </td>
                         <td>
-                            <a href="{{ '/categories/delete/' . $cat->id }}">
+                            <a href="{{ '/order/delete/' . $order->id }}">
                             Удалить
                             </a>
                         </td>
@@ -42,15 +46,15 @@
             @endforeach
                 </tbody>
             </table>
+            @endempty
             <div class="d-grid gap-1">
                 <a
                     class="btn btn-outline-secondary"
-                    href="{{ url('/categories/create') }}"
+                    href="{{ url('/order/input') }}"
                 >
-                    Добавить новую категорию новостей
+                    Добавить новый заказ
                 </a>
             </div>
-            @endempty
         </div>
     </div>
 @endsection

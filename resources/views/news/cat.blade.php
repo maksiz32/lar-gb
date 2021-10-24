@@ -11,7 +11,7 @@
         <div class="alert alert-warning" role="alert">
             Нет записей в данной категории
         </div>
-    @endempty
+    @else
     <div class="container lar-main">
         <div class="row justify-content-center">
             <h2>{{ __("Новости в категории $catName") }}</h2>
@@ -30,4 +30,5 @@
             {{ $news->links() }}
         </div>
     </div>
+    @endempty
 @endsection

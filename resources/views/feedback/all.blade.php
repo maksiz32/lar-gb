@@ -11,7 +11,7 @@
         <div class="alert alert-warning" role="alert">
             Отзывов пока нет
         </div>
-    @endempty
+    @else
     <div class="container lar-main">
         <div class="row justify-content-center">
             @foreach($feedbacks as $one)
@@ -32,4 +32,5 @@
             {{ $feedbacks->links() }}
         </div>
     </div>
+    @endempty
 @endsection

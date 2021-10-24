@@ -58,7 +58,7 @@ class FeedbackController extends Controller
         $name = $feedback->user_name;
         $feedback->delete();
 
-        return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
+        return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::paginate(3)]))
             ->with(['message' => "Отзыв от <strong>$name</strong> удалён"]);
     }
 }

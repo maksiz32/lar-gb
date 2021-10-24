@@ -61,7 +61,10 @@ Route::prefix('/feedback')->group(
 
 Route::prefix('/order')->group(
     function () {
-        Route::get('/', [OrderController::class, 'create']);
-        Route::post('/save', [OrderController::class, 'save'])->name('order.save');
+        Route::get('/', [OrderController::class, 'index']);
+        Route::get('/edit/{order}', [OrderController::class, 'edit']);
+        Route::get('/delete/{id}', [OrderController::class, 'destroy']);
+        Route::get('/input', [OrderController::class, 'create']);
+        Route::match(['post', 'put'], '/save', [OrderController::class, 'save'])->name('order.save');
     }
 );

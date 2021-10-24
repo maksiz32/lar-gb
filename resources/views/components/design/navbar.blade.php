@@ -43,12 +43,18 @@
                         <li><a class="dropdown-item" href="/feedback/input">{{ __('Добавить отзыв / комментарий') }}</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item dropdown">
                     <a
-                        class="nav-link @if(request()->routeIs('order')) active @endif"
-                        href="/order">
+                        class="nav-link dropdown-toggle @if(request()->routeIs('order')) active @endif"
+                        data-bs-toggle="dropdown"
+                        href="#" role="button"
+                        aria-expanded="false">
                         {{ __('Заказать') }}
                     </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/order">{{ __('Все заказы') }}</a></li>
+                        <li><a class="dropdown-item" href="/order/input">{{ __('Добавить заказ') }}</a></li>
+                    </ul>
                 </li>
             </ul>
         </div>
