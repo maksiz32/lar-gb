@@ -36,16 +36,18 @@ Route::prefix('/categories')->group(
         Route::get('/delete/{category}', [CategoryController::class, 'destroy']);
         Route::match(['post', 'put'], '/save', [CategoryController::class, 'store']);
     });
+
 Route::prefix('/news')->group(
     function () {
         Route::get('/cat/{id}', [NewsController::class, 'oneCategory']);
-        Route::get('/one/{id}', [NewsController::class, 'showOne']);
-        Route::get('/edit/{id}', [NewsController::class, 'edit']);
-        Route::get('/delete/{id}', [NewsController::class, 'destroy']);
+        Route::get('/one/{news}', [NewsController::class, 'showOne']);
+        Route::get('/edit/{news}', [NewsController::class, 'edit']);
+        Route::get('/delete/{news}', [NewsController::class, 'destroy']);
         Route::get('/create', [NewsController::class, 'create']);
-        Route::post('/save', [NewsController::class, 'store'])->name('news.input');
+        Route::match(['post', 'put'], '/save', [NewsController::class, 'store'])->name('news.input');
     }
 );
+
 Route::prefix('/feedback')->group(
     function () {
         Route::get('/', [FeedbackController::class, 'list']);
@@ -56,6 +58,7 @@ Route::prefix('/feedback')->group(
         Route::post('/save', [FeedbackController::class, 'save'])->name('feedback.save');
     }
 );
+
 Route::prefix('/order')->group(
     function () {
         Route::get('/', [OrderController::class, 'create']);

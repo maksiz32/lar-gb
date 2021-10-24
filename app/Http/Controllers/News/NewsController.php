@@ -12,18 +12,17 @@ class NewsController extends Controller
 {
     public function oneCategory(int $id)
     {
-        $result = News::getNewsByCategory($id);
-        $news = $result['news'];
-        $catName = $result['catName'];
+        /** @var Category $cat */
+        $cat = Category::find($id);
+        $result = $cat->news()->paginate(3);
 
-        return view('news.cat', ['news' => $news, 'catName' => $catName]);
-//        return view('news.cat', [...$result]);
+        return view('news.cat', ['news' => $result, 'catName' => $cat->category]);
     }
 
-    public function showOne(int $id)
+    public function showOne(News $news)
     {
-        $news = News::oneNews($id);
-        return view('news.one', ['news' => $news]);
+        $oneNews = News::query()->with(['category', 'source'])->find($news->id);
+        return view('news.one', ['news' => $oneNews]);
     }
 
     /**
@@ -33,7 +32,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('news.input', ['categories' => Category::getAllCategories()]);
+        return view('news.input', ['categories' => Category::all()]);
     }
 
     /**
@@ -46,7 +45,7 @@ class NewsController extends Controller
     {
         $validated = $request->validate(
             [
-                'id' => 'integer|exists:news,id|nullable',
+                'id' => 'integer|exists:news,id',
                 'title' => 'required|string',
                 'textNews' => 'required|string',
                 'author' => 'required|string',
@@ -67,23 +66,18 @@ class NewsController extends Controller
                                     ])->id;
         }
 
-        if (isset($validated['id']) && !is_null($validated['id'])) {
-            $id = $validated['id'];
+        if (!isset($validated['id'])) {
+            $news = new News();
             $text = ' добавлена';
         } else {
-            $id = null;
+            $news = News::find($validated['id']);
             $text = ' изменена';
         }
-        $news = News::query()->updateOrCreate([
-            'id' => $id
-        ],
-        [
-            'title' => $validated['title'],
-            'text' => $validated['textNews'],
-            'author' => $validated['author'],
-            'category_id' => $category->id,
-            'source_id' => $source_id,
-        ]);
+        $news->title = $validated['title'];
+        $news->text = $validated['textNews'];
+        $news->author = $validated['author'];
+        $news->category_id = $category->id;
+        $news->source_id = $source_id;
         $news->save();
 
         return redirect(action([__CLASS__, 'oneCategory'], ['id' => $category->id]))
@@ -97,11 +91,11 @@ class NewsController extends Controller
      * @return \Illuminate\Http\Response
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function edit(Request $request)
+    public function edit(News $news)
     {
-        $news = News::find((int) $request['id']);
+        $oneNews = News::query()->with('source')->find($news->id);
         $categories = Category::all();
-        return view('news.input', ['news' => $news, 'categories' => $categories]);
+        return view('news.edit', ['news' => $oneNews, 'categories' => $categories]);
     }
 
     /**
@@ -110,9 +104,8 @@ class NewsController extends Controller
      * @param  \App\Models\News  $news
      * @return \Illuminate\Http\Response
      */
-    public function destroy(int $id)
+    public function destroy(News $news)
     {
-        $news = News::findOrFail($id);
         $title = $news->title;
         $catId = $news->category_id;
         $news->delete();

@@ -22,21 +22,4 @@ class News extends Model
     {
         return $this->belongsTo(Source::class);
     }
-
-    public static function getNewsByCategory(int $id)
-    {
-        /** @var Category $cat */
-        $cat = Category::find($id);
-        $result = $cat->news()->get();
-
-        return [
-            'news' => $result,
-            'catName' => $cat->category,
-            ];
-    }
-
-    public static function oneNews(int $id)
-    {
-        return self::query()->with('category', 'source')->find($id);
-    }
 }
