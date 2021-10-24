@@ -23,7 +23,7 @@
                                 {{ $one->comment }}
                             </p>
                             <div class="card-subtitle">
-                                {{ __('дата: ' . (\Carbon\Carbon::parse($one->created_at))->format('d M Y H:i')) }}
+                                {{ __('дата: ' . $one->created_at->format('d M Y H:i')) }}
                             </div>
                         </div>
                     </div>

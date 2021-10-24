@@ -11,7 +11,7 @@
                     </div>
                     <div class="card-subtitle pb-4">
                         <small class="text-muted font-monospace">
-                            {{ __('дата: ' . (\Carbon\Carbon::parse($feedback->created_at))->format('d M Y H:i')) }}
+                            {{ __('дата: ' . $feedback->created_at->format('d M Y H:i')) }}
                         </small>
                             {{"Автор: $feedback->user_name "}}
                     </div>

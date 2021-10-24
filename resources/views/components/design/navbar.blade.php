@@ -19,14 +19,14 @@
                 </li>
                 <li class="nav-item dropdown">
                     <a
-                        class="nav-link dropdown-toggle @if(request()->routeIs('news.*')) active @endif"
+                        class="nav-link dropdown-toggle @if(request()->routeIs('news.* || categories.*')) active @endif"
                         data-bs-toggle="dropdown"
                         href="#" role="button"
                         aria-expanded="false">
                         {{ __('Новости') }}
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/news">{{ __('Категории новостей') }}</a></li>
+                        <li><a class="dropdown-item" href="/categories">{{ __('Категории новостей') }}</a></li>
                         <li><a class="dropdown-item" href="/news/create">{{ __('Добавить новость') }}</a></li>
                     </ul>
                 </li>

@@ -10,16 +10,6 @@ use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function categories()
-    {
-        return view('news.index', ['categories' => Category::getAllCategories()]);
-    }
-
     public function oneCategory(int $id)
     {
         $result = News::getNewsByCategory($id);
@@ -122,7 +112,7 @@ class NewsController extends Controller
      */
     public function destroy(int $id)
     {
-        $news = News::query()->findOrFail($id);
+        $news = News::findOrFail($id);
         $title = $news->title;
         $catId = $news->category_id;
         $news->delete();

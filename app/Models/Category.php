@@ -15,9 +15,4 @@ class Category extends Model
     {
         return $this->hasMany(News::class);
     }
-
-    public static function getAllCategories()
-    {
-        return self::all();
-    }
 }

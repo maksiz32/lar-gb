@@ -9,7 +9,7 @@
                     <h5 class="card-title">{{ $news->title }}
                         <p class="text-end border-top">
                             <small class="text-muted font-monospace">
-                                {{ __('дата: ' . (\Carbon\Carbon::parse($news->created_at))->format('d M Y H:i')) }}
+                                {{ __('дата: ' . $news->created_at->format('d M Y H:i')) }}
                             </small>
                         </p>
                     </h5>
