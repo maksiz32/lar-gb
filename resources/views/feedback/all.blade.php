@@ -29,6 +29,7 @@
                     </div>
                 </a>
             @endforeach
+            {{ $feedbacks->links() }}
         </div>
     </div>
 @endsection

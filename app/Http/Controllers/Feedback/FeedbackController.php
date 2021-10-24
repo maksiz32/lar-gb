@@ -10,11 +10,12 @@ class FeedbackController extends Controller
 {
     public function input(Request $request)
     {
-        $id = $request->id ?? null;
+        return view('feedback.input');
+    }
 
-        /** @var Feedback $feedback */
-        $feedback = Feedback::find((int)$id);
-        return view('feedback.input', ['feedback' => $feedback]);
+    public function edit(Feedback $feedback)
+    {
+        return view('feedback.edit', ['feedback' => $feedback]);
     }
 
     public function save(Request $request)
@@ -44,18 +45,16 @@ class FeedbackController extends Controller
 
     public function list()
     {
-        return view('feedback.all', ['feedbacks' => Feedback::all()]);
+        return view('feedback.all', ['feedbacks' => Feedback::paginate(3)]);
     }
 
-    public function show($id)
+    public function show(Feedback $feedback)
     {
-        $feedback = Feedback::query()->findOrFail((int) $id);
         return view('feedback.one', ['feedback' => $feedback]);
     }
 
-    public function destroy($id)
+    public function destroy(Feedback $feedback)
     {
-        $feedback = Feedback::query()->findOrFail((int) $id);
         $name = $feedback->user_name;
         $feedback->delete();
 

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Добавить отзыв')
+@section('title', 'Редактировать отзыв')
 
 @section('content')
     <article class="container">
@@ -7,6 +7,8 @@
             <div class="col-md-8">
                 <form action="{{ route('feedback.save') }}" method="POST">
                     {{ csrf_field() }}
+                        @method('PUT')
+                        <input type="hidden" value="{{ $feedback->id }}" name="id">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -23,7 +25,7 @@
                             id="user_name"
                             class="form-control"
                             name="user_name"
-                            value="{{old('user_name')}}"
+                            value="@isset($feedback->user_name){{ $feedback->user_name }}@endisset{{old('user_name')}}"
                             required
                         >
                         </div>
@@ -35,7 +37,7 @@
                                 class="form-control"
                                 name="comment"
                                 required
-                                value="{{old('comment')}}"
+                                value="@isset($feedback->comment){{$feedback->comment}}@endisset{{old('comment')}}"
                             >
                         </div>
                         <button type="submit" class="btn btn-primary">
