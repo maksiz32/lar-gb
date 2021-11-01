@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\News;
 use App\Models\Source;
-use Illuminate\Http\Request;
+use App\Http\Requests\NewsRequest;
+use Illuminate\Contracts\View\View;
 
 class NewsController extends Controller
 {
@@ -26,9 +27,7 @@ class NewsController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return View
      */
     public function create()
     {
@@ -36,52 +35,38 @@ class NewsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param NewsRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request)
+    public function store(NewsRequest $request)
     {
-        $validated = $request->validate(
-            [
-                'id' => 'integer|exists:news,id',
-                'title' => 'required|string',
-                'textNews' => 'required|string',
-                'author' => 'required|string',
-                'categories' => 'integer|exists:categories,id',
-                'sourceId' => 'integer|exists:sources,id|nullable',
-                'sourceName' => 'required|string',
-                'sourcePath' => 'required|string',
-            ]
-        );
         $text = '';
 
-        $category = Category::find($validated['categories']);
-        $source_id = $validated['sourceId'] ?? null;
+        $category = Category::find($request->categories);
+        $source_id = $request->sourceId ?? null;
         if (!$source_id) {
             $source_id = Source::create([
-                'name' => $validated['sourceName'],
-                'path' => $validated['sourcePath'],
+                'name' => $request->sourceName,
+                'path' => $request->sourcePath,
                                     ])->id;
         }
 
-        if (!isset($validated['id'])) {
+        if (!isset($request->id)) {
             $news = new News();
             $text = ' добавлена';
         } else {
-            $news = News::find($validated['id']);
+            $news = News::find($request->id);
             $text = ' изменена';
         }
-        $news->title = $validated['title'];
-        $news->text = $validated['textNews'];
-        $news->author = $validated['author'];
+        $news->title = $request->title;
+        $news->text = $request->textNews;
+        $news->author = $request->author;
         $news->category_id = $category->id;
         $news->source_id = $source_id;
 
         if ($news->save()) {
             return redirect(action([__CLASS__, 'oneCategory'], ['id' => $category->id]))
-                ->with(['message' => 'Новость <strong>' . $validated['title'] . '</strong>' . $text]);
+                ->with(['message' => 'Новость <strong>' . $request->title . '</strong>' . $text]);
         } else {
             return back()->with(['errors' => 'Ошибка при сохранении']);
         }

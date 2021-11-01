@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Http\Requests\CategoryRequest;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -27,18 +28,14 @@ class CategoryController extends Controller
         return view('categories.edit', ['category' => $category]);
     }
 
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        $validated = $request->validate([
-            'id' => 'integer|exists:categories,id',
-            'category' => 'required|string|max:255',
-                                        ]);
-        if(isset($validated['id'])) {
-            $category = Category::findOrFail($validated['id']);
+        if(isset($request->id)) {
+            $category = Category::findOrFail($request->id);
         } else {
             $category = new Category();
         }
-        $category->category = $validated['category'];
+        $category->category = $request->category;
 
         if ($category->save()) {
             return redirect((action([__CLASS__, 'categories'])))

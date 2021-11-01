@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Order;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\OrderRequest;
 
 class OrderController extends Controller
 {
@@ -24,30 +23,24 @@ class OrderController extends Controller
         return view('orders.input');
     }
 
-    public function save(Request $request)
+    public function save(OrderRequest $request)
     {
-        $validated = $request->validate([
-            'id' => 'integer|exists:orders,id',
-            'name' => 'required|string',
-            'email' => 'required|email:rfc,dns|regex:/^.+@.+$/i',
-            'phone' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
-            'order' => 'required|string'
-                                        ]);
-
-        if (isset($validated['id'])) {
-            $order = Order::find($validated['id']);
+        if (isset($request->id)) {
+            $order = Order::find($request->id);
         } else {
             $order = new Order();
         }
-        $order->name = $validated['name'];
-        $order->phone = $validated['phone'];
-        $order->email = $validated['email'];
-        $order->order = $validated['order'];
+        $order->name = $request->name;
+        $order->phone = $request->phone;
+        $order->email = $request->email;
+        $order->order = $request->order;
 
-        $order->save();
-
-        return redirect(action([__CLASS__, 'index']))
-            ->with(['message' => "Заказ от {$order->name} успешно создан"]);
+        if ($order->save()) {
+            return redirect(action([__CLASS__, 'index']))
+                ->with(['message' => "Заказ от {$order->name} успешно создан"]);
+        } else {
+            return back()->with(['errors' => 'Ошибка сохранения']);
+        }
     }
 
     public function destroy(int $id)
