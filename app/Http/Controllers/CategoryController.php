@@ -34,15 +34,18 @@ class CategoryController extends Controller
             'category' => 'required|string|max:255',
                                         ]);
         if(isset($validated['id'])) {
-            $category = Category::find($validated['id']);
+            $category = Category::findOrFail($validated['id']);
         } else {
             $category = new Category();
         }
         $category->category = $validated['category'];
-        $category->save();
 
-        return redirect((action([__CLASS__, 'categories'])))
-                            ->with(['message' => "Категория <strong>$category->category</strong> изменена"]);
+        if ($category->save()) {
+            return redirect((action([__CLASS__, 'categories'])))
+                ->with(['message' => "Категория <strong>$category->category</strong> изменена"]);
+        } else {
+            return back()->with(['errors' => 'Ошибка при сохранении']);
+        }
     }
 
     public function destroy(Request $request)

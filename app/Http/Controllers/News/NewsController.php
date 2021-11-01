@@ -13,10 +13,10 @@ class NewsController extends Controller
     public function oneCategory(int $id)
     {
         /** @var Category $cat */
-        $cat = Category::find($id);
-        $result = $cat->news()->paginate(3);
+        $category = Category::findOrFail($id);
+        $result = $category->news()->paginate(3);
 
-        return view('news.cat', ['news' => $result, 'catName' => $cat->category]);
+        return view('news.cat', ['news' => $result, 'catName' => $category->category]);
     }
 
     public function showOne(News $news)
@@ -60,7 +60,7 @@ class NewsController extends Controller
         $category = Category::find($validated['categories']);
         $source_id = $validated['sourceId'] ?? null;
         if (!$source_id) {
-            $source_id = Source::query()->create([
+            $source_id = Source::create([
                 'name' => $validated['sourceName'],
                 'path' => $validated['sourcePath'],
                                     ])->id;
@@ -78,10 +78,13 @@ class NewsController extends Controller
         $news->author = $validated['author'];
         $news->category_id = $category->id;
         $news->source_id = $source_id;
-        $news->save();
 
-        return redirect(action([__CLASS__, 'oneCategory'], ['id' => $category->id]))
-            ->with(['message' => 'Новость <strong>' . $validated['title'] . '</strong>' . $text]);
+        if ($news->save()) {
+            return redirect(action([__CLASS__, 'oneCategory'], ['id' => $category->id]))
+                ->with(['message' => 'Новость <strong>' . $validated['title'] . '</strong>' . $text]);
+        } else {
+            return back()->with(['errors' => 'Ошибка при сохранении']);
+        }
     }
 
     /**
@@ -93,7 +96,7 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
-        $oneNews = News::query()->with('source')->find($news->id);
+        $oneNews = News::with('source')->find($news->id);
         $categories = Category::all();
         return view('news.edit', ['news' => $oneNews, 'categories' => $categories]);
     }
@@ -107,10 +110,10 @@ class NewsController extends Controller
     public function destroy(News $news)
     {
         $title = $news->title;
-        $catId = $news->category_id;
+        $categoryId = $news->category_id;
         $news->delete();
 
-        return redirect(action([__CLASS__, 'oneCategory'], ['id' => $catId]))
+        return redirect(action([__CLASS__, 'oneCategory'], ['id' => $categoryId]))
             ->with(['message' => "Новость <strong>$title</strong> удалена"]);
     }
 }

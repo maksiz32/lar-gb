@@ -29,18 +29,21 @@ class FeedbackController extends Controller
         );
         $text = '';
         if(!isset($validated['id'])) {
-            $feed = new Feedback();
+            $feedback = new Feedback();
             $text = 'добавлен';
         } else {
-            $feed = Feedback::find($validated['id']);
+            $feedback = Feedback::findOrFail($validated['id']);
             $text = 'изменён';
         }
-        $feed->user_name = $validated['user_name'];
-        $feed->comment = $validated['comment'];
-        $feed->save();
+        $feedback->user_name = $validated['user_name'];
+        $feedback->comment = $validated['comment'];
 
-        return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
-            ->with(['message' => "Отзыв от {$feed->user_name} {$text}"]);
+        if ($feedback->save()) {
+            return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
+                ->with(['message' => "Отзыв от {$feedback->user_name} {$text}"]);
+        } else {
+            return back()->with(['errors' => "Ошибка при сохранении"]);
+        }
     }
 
     public function list()
