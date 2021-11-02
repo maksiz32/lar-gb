@@ -24,6 +24,9 @@
                                 {{ $one->text }}
                             </p>
                         </div>
+                        <div class="card-footer small text-end">
+                            <i>{{ $one->created_at->format('d.m.Y') }}</i>
+                        </div>
                     </div>
                 </a>
             @endforeach

@@ -22,12 +22,13 @@
                     </tr>
                 </thead>
                 <tbody>
-            @foreach($orders as $order)
+                @foreach($orders as $order)
                     <tr>
                         <td>
                             <div>{{ $order->name }}</div>
                             <div>{{ $order->phone }}</div>
                             <div>{{ $order->email }}</div>
+                            <div>{{ __('дата: ' . $order->created_at->format('d M Y H:i')) }}</div>
                         </td>
                         <td>
                             <div>{{ $order->order }}</div>
@@ -43,7 +44,7 @@
                             </a>
                         </td>
                     </tr>
-            @endforeach
+                @endforeach
                 </tbody>
             </table>
             @endempty
