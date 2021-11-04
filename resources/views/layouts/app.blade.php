@@ -29,5 +29,6 @@
         </main>
         <x-design.footer></x-design.footer>
     </div>
+    @stack('js')
 </body>
 </html>

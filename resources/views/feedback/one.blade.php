@@ -23,9 +23,11 @@
                             Редактировать
                         </a>
                         <a
-                            class="btn btn-light"
+                            class="btn btn-light feedback-button__delete"
                             style="border: 1px solid black"
-                            href="{{ url('/feedback/delete/' . $feedback->id) }}">
+                            href="#"
+                            rel="{{ $feedback->id }}"
+                        >
                             Удалить
                         </a>
                     </div>
@@ -34,3 +36,33 @@
         </div>
     </div>
 @endsection
+@push('js')
+    <script type='text/javascript'>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fetchData = async (url, options) => {
+                const response = await fetch(`${url}`, options);
+                const body = await response.json();
+                return body;
+            }
+            const link = document.querySelector('.feedback-button__delete');
+            link.addEventListener("click", function () {
+                if(confirm("Вы подтверждаете удаление ?")) {
+                    fetchData("{{ url('/feedback/delete') }}/" + this.getAttribute('rel'), {
+                        method: "DELETE",
+                        headers: {
+                            'Content-Type': 'application/json; charset=utf-8',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        }
+                    }).then((Response) => {
+                        alert(Response.message);
+                        window.location.href = '/feedback';
+                    })
+                        .catch(() => {
+                            alert(Response.message);
+                            return false;
+                        })
+                }
+            });
+        });
+    </script>
+@endpush

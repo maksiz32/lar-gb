@@ -24,14 +24,36 @@ class NewsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'integer|exists:news,id',
-            'title' => 'required|string',
-            'textNews' => 'required|string',
-            'author' => 'required|string',
-            'categories' => 'integer|exists:categories,id',
-            'sourceId' => 'integer|exists:sources,id|nullable',
+            'id' => 'nullable|integer|exists:news,id',
+            'title' => 'required|alpha_dash|max:255',
+            'textNews' => 'required|alpha_dash',
+            'author' => 'required|alpha_dash|max:255',
+            'categories' => 'nullable|integer|exists:categories,id',
+            'sourceId' => 'nullable|integer|exists:sources,id',
             'sourceName' => 'required|string',
             'sourcePath' => 'required|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'required' => 'Поле :attrubute обязательно для заполнения',
+            'integer' => 'Значение :attribute может быть только числом',
+            'exists' => 'Передано несуществующее значение :attribute',
+            'string' => 'Значение :attribute может быть только строкой',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'author' => 'автор',
+            'title' => 'заголовок',
+            'textNews' => 'поле добавления новости',
+            'categories' => 'категории новостей',
+            'sourceName' => 'имя/название ресурса',
+            'sourcePath' => 'адрес ресурса',
         ];
     }
 }

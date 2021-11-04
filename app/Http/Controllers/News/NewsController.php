@@ -11,23 +11,32 @@ use Illuminate\Contracts\View\View;
 
 class NewsController extends Controller
 {
+    /**
+     * @param int $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
+     */
     public function oneCategory(int $id)
     {
-        /** @var Category $cat */
+        /** @var Category $category */
         $category = Category::findOrFail($id);
         $result = $category->news()->paginate(3);
 
         return view('news.cat', ['news' => $result, 'catName' => $category->category]);
     }
 
+    /**
+     * @param News $news
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
+     */
     public function showOne(News $news)
     {
         $oneNews = News::query()->with(['category', 'source'])->find($news->id);
+
         return view('news.one', ['news' => $oneNews]);
     }
 
     /**
-     * @return View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
      */
     public function create()
     {
@@ -40,8 +49,6 @@ class NewsController extends Controller
      */
     public function store(NewsRequest $request)
     {
-        $text = '';
-
         $category = Category::find($request->categories);
         $source_id = $request->sourceId ?? null;
         if (!$source_id) {
@@ -53,10 +60,8 @@ class NewsController extends Controller
 
         if (!isset($request->id)) {
             $news = new News();
-            $text = ' добавлена';
         } else {
             $news = News::find($request->id);
-            $text = ' изменена';
         }
         $news->title = $request->title;
         $news->text = $request->textNews;
@@ -65,40 +70,40 @@ class NewsController extends Controller
         $news->source_id = $source_id;
 
         if ($news->save()) {
+
             return redirect(action([__CLASS__, 'oneCategory'], ['id' => $category->id]))
-                ->with(['message' => 'Новость <strong>' . $request->title . '</strong>' . $text]);
-        } else {
-            return back()->with(['errors' => 'Ошибка при сохранении']);
+                ->with(['message' => __('messages.admin.news.store.success')]);
         }
+
+        return back()->with(['errors' => __('messages.admin.news.store.fail')]);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\News $news
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @param News $news
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
      */
     public function edit(News $news)
     {
         $oneNews = News::with('source')->find($news->id);
         $categories = Category::all();
+
         return view('news.edit', ['news' => $oneNews, 'categories' => $categories]);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\News  $news
-     * @return \Illuminate\Http\Response
+     * @param News $news
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(News $news)
     {
-        $title = $news->title;
-        $categoryId = $news->category_id;
-        $news->delete();
+        try {
+            $news->delete();
 
-        return redirect(action([__CLASS__, 'oneCategory'], ['id' => $categoryId]))
-            ->with(['message' => "Новость <strong>$title</strong> удалена"]);
+            return response()->json(['message' => __('messages.admin.news.destroy.success')]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage() . PHP_EOL, $e->getTrace());
+
+            return response()->json(['message' => __('messages.admin.news.destroy.fail')]);
+        }
     }
 }

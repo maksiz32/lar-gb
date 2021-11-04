@@ -24,8 +24,15 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'integer|exists:categories,id',
+            'id' => 'nullable|integer|exists:categories,id',
             'category' => 'required|string|max:255',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'category' => 'категория новостей',
         ];
     }
 }

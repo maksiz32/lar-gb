@@ -21,20 +21,24 @@
                     </tr>
                 </thead>
                 <tbody>
-            @foreach($categories as $cat)
+            @foreach($categories as $category)
                     <tr>
                         <td>
-                            <a href="{{ url('/news/cat/' . $cat->id) }}" class="text-decoration-none">
-                                <div>{{ $cat->category }}</div>
+                            <a href="{{ url('/news/cat/' . $category->id) }}" class="text-decoration-none">
+                                <div>{{ $category->category }}</div>
                             </a>
                         </td>
                         <td>
-                            <a href="{{ '/categories/edit/' . $cat->id }}">
+                            <a href="{{ '/categories/edit/' . $category->id }}">
                             Редактировать
                             </a>
                         </td>
                         <td>
-                            <a href="{{ '/categories/delete/' . $cat->id }}">
+                            <a
+                                class="category-button__delete"
+                                href="javascript:;"
+                                rel="{{ $category->id }}"
+                            >
                             Удалить
                             </a>
                         </td>
@@ -54,4 +58,36 @@
         </div>
     </div>
 @endsection
+@push('js')
+    <script type='text/javascript'>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fetchData = async (url, options) => {
+                const response = await fetch(`${url}`, options);
+                const body = await response.json();
+                return body;
+            }
+            const link = document.querySelectorAll('.category-button__delete');
+            link.forEach(function (item) {
+                item.addEventListener("click", function () {
+                    if (confirm("Вы подтверждаете удаление ?")) {
+                        fetchData("{{ url('/categories/delete') }}/" + this.getAttribute('rel'), {
+                            method: "DELETE",
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        }).then((Response) => {
+                            alert(Response.message);
+                            window.location.href = '/categories';
+                        })
+                            .catch(() => {
+                                alert(Response.message);
+                                return false;
+                            })
+                    }
+                });
+            });
+        });
+    </script>
+@endpush
 

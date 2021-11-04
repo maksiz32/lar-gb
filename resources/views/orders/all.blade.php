@@ -39,7 +39,11 @@
                             </a>
                         </td>
                         <td>
-                            <a href="{{ '/order/delete/' . $order->id }}">
+                            <a
+                                class="order-button__delete"
+                                href="#"
+                                rel="{{ $order->id }}"
+                            >
                             Удалить
                             </a>
                         </td>
@@ -59,4 +63,35 @@
         </div>
     </div>
 @endsection
-
+@push('js')
+    <script type='text/javascript'>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fetchData = async (url, options) => {
+                const response = await fetch(`${url}`, options);
+                const body = await response.json();
+                return body;
+            }
+            const link = document.querySelectorAll('.order-button__delete');
+            link.forEach(function (item) {
+                item.addEventListener("click", function () {
+                    if (confirm("Вы подтверждаете удаление ?")) {
+                        fetchData("{{ url('/order/delete') }}/" + this.getAttribute('rel'), {
+                            method: "DELETE",
+                            headers: {
+                                'Content-Type': 'application/json; charset=utf-8',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            }
+                        }).then((Response) => {
+                            alert(Response.message);
+                            window.location.href = '/order';
+                        })
+                            .catch(() => {
+                                alert(Response.message);
+                                return false;
+                            })
+                    }
+                });
+            });
+        });
+    </script>
+@endpush

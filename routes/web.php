@@ -33,7 +33,7 @@ Route::prefix('/categories')->group(
         Route::get('/', [CategoryController::class, 'categories']);
         Route::get('/create', [CategoryController::class, 'create']);
         Route::get('/edit/{category}', [CategoryController::class, 'edit']);
-        Route::get('/delete/{category}', [CategoryController::class, 'destroy']);
+        Route::delete('/delete/{category}', [CategoryController::class, 'destroy']);
         Route::match(['post', 'put'], '/save', [CategoryController::class, 'store']);
     });
 
@@ -42,7 +42,7 @@ Route::prefix('/news')->group(
         Route::get('/cat/{id}', [NewsController::class, 'oneCategory']);
         Route::get('/one/{news}', [NewsController::class, 'showOne']);
         Route::get('/edit/{news}', [NewsController::class, 'edit']);
-        Route::get('/delete/{news}', [NewsController::class, 'destroy']);
+        Route::delete('/delete/{news}', [NewsController::class, 'destroy']);
         Route::get('/create', [NewsController::class, 'create']);
         Route::match(['post', 'put'], '/save', [NewsController::class, 'store'])->name('news.input');
     }
@@ -53,7 +53,7 @@ Route::prefix('/feedback')->group(
         Route::get('/', [FeedbackController::class, 'list']);
         Route::get('/show/{feedback}', [FeedbackController::class, 'show']);
         Route::get('/edit/{feedback}', [FeedbackController::class, 'edit']);
-        Route::get('/delete/{feedback}', [FeedbackController::class, 'destroy']);
+        Route::delete('/delete/{feedback}', [FeedbackController::class, 'destroy']);
         Route::get('/input', [FeedbackController::class, 'input']);
         Route::match(['post', 'put'], '/save', [FeedbackController::class, 'save'])->name('feedback.save');
     }
@@ -63,7 +63,7 @@ Route::prefix('/order')->group(
     function () {
         Route::get('/', [OrderController::class, 'index']);
         Route::get('/edit/{order}', [OrderController::class, 'edit']);
-        Route::get('/delete/{id}', [OrderController::class, 'destroy']);
+        Route::delete('/delete/{id}', [OrderController::class, 'destroy']);
         Route::get('/input', [OrderController::class, 'create']);
         Route::match(['post', 'put'], '/save', [OrderController::class, 'save'])->name('order.save');
     }

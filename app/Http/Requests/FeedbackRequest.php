@@ -24,9 +24,17 @@ class FeedbackRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id' => 'integer|exists:feedbacks,id',
-            'user_name' => 'required|string',
+            'id' => 'nullable|integer|exists:feedbacks,id',
+            'user_name' => 'required|string|max:255',
             'comment' => 'required|string',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'user_name' => 'имя пользователя',
+            'comment' => 'комментарий',
         ];
     }
 }

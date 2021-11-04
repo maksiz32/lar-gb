@@ -7,7 +7,7 @@
             {!! session()->get('message') !!}
         </div>
     @endif
-    @empty($news)
+    @if(count($news) < 1)
         <div class="alert alert-warning" role="alert">
             Нет записей в данной категории
         </div>
