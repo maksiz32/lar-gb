@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserRole;
-use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
