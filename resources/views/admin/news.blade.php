@@ -38,13 +38,13 @@
                         <td>{{ $new->source->path }}</td>
                         <td>{{ __($new->created_at->format('d.m.Y H:i')) }}</td>
                         <td>
-                            <a href="{{ '/order/edit/' . $new->id }}">
+                            <a href="{{ '/news/edit/' . $new->id }}">
                             Редактировать
                             </a>
                         </td>
                         <td>
                             <a
-                                class="news-button__delete"
+                                class="news-button__delete text-danger"
                                 href="#"
                                 rel="{{ $new->id }}"
                             >
@@ -59,9 +59,9 @@
             <div class="d-grid gap-1 mb-5">
                 <a
                     class="btn btn-outline-secondary"
-                    href="{{ url('/news/input') }}"
+                    href="{{ url('/news/create') }}"
                 >
-                    Добавить новый заказ
+                    Добавить новость
                 </a>
             </div>
         </div>

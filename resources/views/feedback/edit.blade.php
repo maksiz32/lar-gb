@@ -5,10 +5,10 @@
     <article class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form action="{{ route('feedback.save') }}" method="POST">
+                <form action="{{ route('feedback.update') }}" method="POST">
                     {{ csrf_field() }}
                         @method('PUT')
-                        <input type="hidden" value="{{ $feedback->id }}" name="id">
+                        <input type="hidden" value="{{ old('id', $feedback->id) }}" name="id">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -25,7 +25,7 @@
                             id="user_name"
                             class="form-control"
                             name="user_name"
-                            value="@isset($feedback->user_name){{ $feedback->user_name }}@endisset{{old('user_name')}}"
+                            value="{{ old('user_name', $feedback->user_name) }}"
                             required
                         >
                         </div>
@@ -37,7 +37,7 @@
                                 class="form-control"
                                 name="comment"
                                 required
-                                value="@isset($feedback->comment){{$feedback->comment}}@endisset{{old('comment')}}"
+                                value="{{ old('comment', $feedback->comment) }}"
                             >
                         </div>
                         <button type="submit" class="btn btn-primary">

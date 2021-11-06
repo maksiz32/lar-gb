@@ -55,11 +55,11 @@ class NewsController extends Controller
 
     /**
      * @param NewsRequest $request
+     * @param News $news
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(NewsRequest $request)
+    public function store(NewsRequest $request, News $news)
     {
-        $category = Category::findOrFail($request->categories);
         $source_id = $request->sourceId ?? null;
         if (!$source_id) {
             $source_id = Source::create([
@@ -68,24 +68,41 @@ class NewsController extends Controller
                                     ])->id;
         }
 
-        if (!isset($request->id)) {
-            $news = new News();
-        } else {
-            $news = News::findOrFail($request->id);
-        }
-        $news->title = $request->title;
-        $news->text = $request->textNews;
-        $news->author = $request->author;
-        $news->category_id = $category->id;
+        $news = $news->fill($request->validated());
         $news->source_id = $source_id;
 
         if ($news->save()) {
 
-            return redirect(action([__CLASS__, 'oneCategory'], ['id' => $category->id]))
+            return redirect(action([__CLASS__, 'oneCategory'], ['id' => $news->category_id]))
                 ->with(['message' => __('messages.admin.news.store.success')]);
         }
 
         return back()->with(['errors' => __('messages.admin.news.store.fail')]);
+    }
+
+    /**
+     * @param NewsRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function input(NewsRequest $request)
+    {
+        $source_id = $request->sourceId ?? null;
+        if (!$source_id) {
+            $source_id = Source::create([
+                                            'name' => $request->sourceName,
+                                            'path' => $request->sourcePath,
+                                        ])->id;
+        }
+
+        $news = News::create($request->validated());
+        $news->source_id = $source_id;
+        if ($news->save()) {
+
+            return redirect(action([__CLASS__, 'oneCategory'], ['id' => $news->category_id]))
+                ->with(['message' => __('messages.admin.news.input.success')]);
+        }
+
+        return back()->with(['errors' => __('messages.admin.news.input.fail')]);
     }
 
     /**

@@ -5,7 +5,7 @@
     <article class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form action="{{ route('feedback.save') }}" method="POST">
+                <form action="{{ route('feedback.create') }}" method="POST">
                     {{ csrf_field() }}
                     @if ($errors->any())
                         <div class="alert alert-danger">

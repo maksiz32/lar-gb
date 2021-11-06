@@ -25,9 +25,9 @@ class NewsRequest extends FormRequest
     {
         return [
             'id' => 'nullable|integer|exists:news,id',
-            'title' => 'required|alpha_dash|max:255',
-            'textNews' => 'required|alpha_dash',
-            'author' => 'required|alpha_dash|max:255',
+            'title' => 'required|string|max:255',
+            'textNews' => 'required|string',
+            'author' => 'required|string|max:255',
             'categories' => 'nullable|integer|exists:categories,id',
             'sourceId' => 'nullable|integer|exists:sources,id',
             'sourceName' => 'required|string',

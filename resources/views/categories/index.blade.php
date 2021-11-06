@@ -4,6 +4,13 @@
 @section('content')
     <div class="container lar-main">
         <div class="row justify-content-center">
+        @if(session()->get('message'))
+            <div class="alert alert-success mt-3 mb-3">
+                {{ session()->get('message') }}
+            </div>
+        @endif
+        </div>
+        <div class="row justify-content-center">
             <div class="row">
                 {{ $categories->links() }}
             </div>

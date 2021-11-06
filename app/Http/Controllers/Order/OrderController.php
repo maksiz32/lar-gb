@@ -47,24 +47,32 @@ class OrderController extends Controller
      * @param OrderRequest $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function save(OrderRequest $request)
+    public function input(OrderRequest $request)
     {
-        if (isset($request->id)) {
-            $order = Order::find($request->id);
-        } else {
-            $order = new Order();
-        }
-        $order->name = $request->name;
-        $order->phone = $request->phone;
-        $order->email = $request->email;
-        $order->order = $request->order;
+        $order = Order::create($request->validated());
 
         if ($order->save()) {
             return redirect(action([__CLASS__, 'index']))
-                ->with(['message' => __('messages.admin.order.save.success')]);
+                ->with(['message' => __('messages.admin.order.input.success')]);
         }
 
-        return back()->with(['errors' => __('messages.admin.order.save.fail')]);
+        return back()->with(['errors' => __('messages.admin.order.input.fail')]);
+    }
+
+    /**
+     * @param OrderRequest $request
+     * @param Order $order
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(OrderRequest $request, Order $order)
+    {
+        $order = $order->fill($request->validated());
+        if ($order->save()) {
+            return redirect(action([__CLASS__, 'index']))
+                ->with(['message' => __('messages.admin.order.update.success')]);
+        }
+
+        return back()->with(['errors' => __('messages.admin.order.update.fail')]);
     }
 
     /**

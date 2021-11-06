@@ -36,7 +36,7 @@
                     </td>
                     <td>
                         <a
-                            class="feedback-button__delete"
+                            class="feedback-button__delete text-danger"
                             href="#"
                             rel="{{ $feedback->id }}"
                         >
@@ -48,6 +48,14 @@
             {{ $feedbacks->links() }}
         </div>
     @endempty
+    <div class="d-grid gap-1 mb-5">
+        <a
+            class="btn btn-outline-secondary"
+            href="{{ url('/feedback/input') }}"
+        >
+            Добавить отзыв
+        </a>
+    </div>
 @endsection
 @push('js')
     <script type='text/javascript'>

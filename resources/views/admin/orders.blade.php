@@ -40,7 +40,7 @@
                         </td>
                         <td>
                             <a
-                                class="order-button__delete"
+                                class="order-button__delete text-danger"
                                 href="#"
                                 rel="{{ $order->id }}"
                             >
@@ -55,7 +55,7 @@
             <div class="d-grid gap-1">
                 <a
                     class="btn btn-outline-secondary"
-                    href="{{ url('/order/input') }}"
+                    href="{{ url('/order/create') }}"
                 >
                     Добавить новый заказ
                 </a>

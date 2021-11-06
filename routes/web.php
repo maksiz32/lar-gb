@@ -45,43 +45,40 @@ Route::group(['middleware' => 'auth'], function () {
     });
 });
 
-Route::prefix('/categories')->group(
-    function () {
-        Route::get('/', [CategoryController::class, 'categories']);
-        Route::get('/create', [CategoryController::class, 'create']);
-        Route::get('/edit/{category}', [CategoryController::class, 'edit']);
-        Route::delete('/delete/{category}', [CategoryController::class, 'destroy']);
-        Route::match(['post', 'put'], '/save', [CategoryController::class, 'store']);
-    });
+Route::group(['prefix' => '/categories', 'as' => 'categories.'], function () {
+    Route::get('/', [CategoryController::class, 'categories']);
+    Route::get('/create', [CategoryController::class, 'create']);
+    Route::get('/edit/{category}', [CategoryController::class, 'edit']);
+    Route::delete('/delete/{category}', [CategoryController::class, 'destroy']);
+    Route::put('/save', [CategoryController::class, 'store'])->name('update');
+    Route::post('/create', [CategoryController::class, 'input'])->name('input');
+});
 
-Route::prefix('/news')->group(
-    function () {
-        Route::get('/cat/{id}', [NewsController::class, 'oneCategory']);
-        Route::get('/one/{news}', [NewsController::class, 'showOne']);
-        Route::get('/edit/{news}', [NewsController::class, 'edit']);
-        Route::delete('/delete/{news}', [NewsController::class, 'destroy']);
-        Route::get('/create', [NewsController::class, 'create']);
-        Route::match(['post', 'put'], '/save', [NewsController::class, 'store'])->name('news.input');
-    }
-);
+Route::group(['prefix' => '/news', 'as' => 'news.'], function () {
+    Route::get('/cat/{id}', [NewsController::class, 'oneCategory']);
+    Route::get('/one/{news}', [NewsController::class, 'showOne']);
+    Route::get('/edit/{news}', [NewsController::class, 'edit']);
+    Route::delete('/delete/{news}', [NewsController::class, 'destroy']);
+    Route::get('/create', [NewsController::class, 'create']);
+    Route::put('/save', [NewsController::class, 'store'])->name('update');
+    Route::post('/input', [NewsController::class, 'input'])->name('input');
+});
 
-Route::prefix('/feedback')->group(
-    function () {
-        Route::get('/', [FeedbackController::class, 'all']);
-        Route::get('/show/{feedback}', [FeedbackController::class, 'show']);
-        Route::get('/edit/{feedback}', [FeedbackController::class, 'edit']);
-        Route::delete('/delete/{feedback}', [FeedbackController::class, 'destroy']);
-        Route::get('/input', [FeedbackController::class, 'input']);
-        Route::match(['post', 'put'], '/save', [FeedbackController::class, 'save'])->name('feedback.save');
-    }
-);
+Route::group(['prefix' => '/feedback', 'as' => 'feedback.'], function () {
+    Route::get('/', [FeedbackController::class, 'all']);
+    Route::get('/show/{feedback}', [FeedbackController::class, 'show']);
+    Route::get('/edit/{feedback}', [FeedbackController::class, 'edit']);
+    Route::delete('/delete/{feedback}', [FeedbackController::class, 'destroy']);
+    Route::get('/input', [FeedbackController::class, 'input']);
+    Route::put('/update', [FeedbackController::class, 'update'])->name('update');
+    Route::post('/create', [FeedbackController::class, 'create'])->name('create');
+});
 
-Route::prefix('/order')->group(
-    function () {
-        Route::get('/', [OrderController::class, 'index']);
-        Route::get('/edit/{order}', [OrderController::class, 'edit']);
-        Route::delete('/delete/{id}', [OrderController::class, 'destroy']);
-        Route::get('/input', [OrderController::class, 'create']);
-        Route::match(['post', 'put'], '/save', [OrderController::class, 'save'])->name('order.save');
-    }
-);
+Route::group(['prefix' => '/order', 'as' => 'order.'], function () {
+    Route::get('/', [OrderController::class, 'index']);
+    Route::get('/edit/{order}', [OrderController::class, 'edit']);
+    Route::delete('/delete/{id}', [OrderController::class, 'destroy']);
+    Route::get('/create', [OrderController::class, 'create']);
+    Route::put('/update', [OrderController::class, 'update'])->name('update');
+    Route::post('/input', [OrderController::class, 'input'])->name('input');
+});

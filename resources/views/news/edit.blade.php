@@ -5,10 +5,10 @@
 <article class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <form action="{{ route('news.input') }}" method="POST">
+            <form action="{{ route('news.update') }}" method="POST">
                 {{ csrf_field() }}
                 @method('PUT')
-                <input type="hidden" name="id" value="{{$news->id}}{{old('id')}}">
+                <input type="hidden" name="id" value="{{ old('id', $news->id) }}">
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -22,11 +22,11 @@
                     <label for="categories" class="col-md-4 control-label">Тип объекта:</label>
                     <select name="categories" required>
                         <option disabled>Тип объекта:</option>
-                        @foreach($categories as $cat)
+                        @foreach($categories as $category)
                             <option
-                                value="{{ $cat->id }}"
-                                {{ $news->category_id === $cat->id ? 'selected' : ''}}
-                            >{{ $cat->category }}</option>
+                                value="{{ $category->id }}"
+                                {{ $news->category_id === $category->id ? 'selected' : ''}}
+                            >{{ $category->category }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -37,7 +37,7 @@
                         id="title"
                         class="form-control"
                         name="title"
-                        value="@isset($news->title){{$news->title}}@endisset{{old('title')}}"
+                        value="{{ old('title', $news->title)}}"
                         required
                     >
                 </div>
@@ -49,7 +49,7 @@
                         class="form-control"
                         name="textNews"
                         required
-                    >@isset($news->text){{$news->text}}@endisset{{old('textNews')}}
+                    >{{ old('textNews', $news->text)}}
                     </textarea>
                 </div>
                 <div class="form-group">
@@ -59,19 +59,19 @@
                         id="author"
                         class="form-control"
                         name="author"
-                        value="@isset($news->author){{$news->author}}@endisset{{old('author')}}"
+                        value="{{ old('author', $news->author)}}"
                         required
                     >
                 </div>
                 <div class="form-group">
-                    <input type="hidden" name="sourceId" value="@isset($news->source->id){{$news->source->id}}@endisset{{old('sourceId')}}">
+                    <input type="hidden" name="sourceId" value="{{ old('sourceId', $news->source->id)}}">
                     <label for="sourceName" class="col-md-4 control-label">Источник новостей:</label>
                     <input
                         type="text"
                         id="sourceName"
                         class="form-control"
                         name="sourceName"
-                        value="@isset($news->source->name){{$news->source->name}}@endisset{{old('sourceName')}}"
+                        value="{{ old('sourceName', $news->source->name)}}"
                         required
                     >
                     <input
@@ -79,7 +79,7 @@
                         id="sourcePath"
                         class="form-control"
                         name="sourcePath"
-                        value="@isset($news->source->path){{$news->source->path}}@else{{__('http://lar-gb')}}@endisset"
+                        value="@isset($news->source->path){{ $news->source->path }}@else{{__('http://lar-gb')}}@endisset"
                         required
                     >
                 </div>

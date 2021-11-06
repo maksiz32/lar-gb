@@ -44,17 +44,12 @@ class CategoryController extends Controller
 
     /**
      * @param CategoryRequest $request
+     * @param Category $category
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(CategoryRequest $request)
+    public function store(CategoryRequest $request, Category $category)
     {
-        if (isset($request->id)) {
-            $category = Category::findOrFail($request->id);
-        } else {
-            $category = new Category();
-        }
-        $category->category = $request->category;
-
+        $category = $category->fill($request->validated());
         if ($category->save()) {
 
             return redirect((action([__CLASS__, 'list'])))
@@ -62,6 +57,18 @@ class CategoryController extends Controller
         }
 
         return back()->with(['errors' => __('messages.admin.category.store.fail')]);
+    }
+
+    public function input(CategoryRequest $request)
+    {
+        $category = Category::create($request->validated());
+        if ($category->save()) {
+
+            return redirect((action([__CLASS__, 'list'])))
+                ->with(['message' => __('messages.admin.category.input.success')]);
+        }
+
+        return back()->with(['errors' => __('messages.admin.category.input.fail')]);
     }
 
     /**

@@ -32,24 +32,33 @@ class FeedbackController extends Controller
 
     /**
      * @param FeedbackRequest $request
+     * @param Feedback $feedback
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function save(FeedbackRequest $request)
+    public function update(FeedbackRequest $request, Feedback $feedback)
     {
-        if(!isset($request->id)) {
-            $feedback = new Feedback();
-        } else {
-            $feedback = Feedback::findOrFail($request->id);
-        }
-        $feedback->user_name = $request->user_name;
-        $feedback->comment = $request->comment;
-
+        $feedback = $feedback->fill($request->validated());
         if ($feedback->save()) {
             return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
-                ->with(['message' => __('messages.admin.feedback.save.success')]);
+                ->with(['message' => __('messages.admin.feedback.update.success')]);
         }
 
-        return back()->with(['errors' => __('messages.admin.feedback.save.fail')]);
+        return back()->with(['errors' => __('messages.admin.feedback.update.fail')]);
+    }
+
+    /**
+     * @param FeedbackRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function create(FeedbackRequest $request)
+    {
+        $feedback = Feedback::create($request->validated());
+        if ($feedback->save()) {
+            return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
+                ->with(['message' => __('messages.admin.feedback.create.success')]);
+        }
+
+        return back()->with(['errors' => __('messages.admin.feedback.create.fail')]);
     }
 
     /**

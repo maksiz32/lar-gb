@@ -33,7 +33,7 @@
                     </td>
                     <td>
                         <a
-                            class="category-button__delete"
+                            class="category-button__delete text-danger"
                             href="javascript:;"
                             rel="{{ $user->id }}"
                         >

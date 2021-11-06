@@ -26,9 +26,8 @@ class UserController extends Controller
         return view('admin.user', ['user' => User::findOrFail($user->id), 'roles' => UserRole::get()]);
     }
 
-    public function store(UserRequest $request)
+    public function store(UserRequest $request, User $user)
     {
-        $user = User::findOrFail($request->id);
         $user = $user->fill($request->validated())->save();
 
         if($user) {
