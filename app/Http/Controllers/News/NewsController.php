@@ -59,7 +59,7 @@ class NewsController extends Controller
      */
     public function store(NewsRequest $request)
     {
-        $category = Category::find($request->categories);
+        $category = Category::findOrFail($request->categories);
         $source_id = $request->sourceId ?? null;
         if (!$source_id) {
             $source_id = Source::create([
@@ -71,7 +71,7 @@ class NewsController extends Controller
         if (!isset($request->id)) {
             $news = new News();
         } else {
-            $news = News::find($request->id);
+            $news = News::findOrFail($request->id);
         }
         $news->title = $request->title;
         $news->text = $request->textNews;
