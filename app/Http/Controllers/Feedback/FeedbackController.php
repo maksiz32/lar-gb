@@ -8,6 +8,11 @@ use App\Http\Requests\FeedbackRequest;
 
 class FeedbackController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('is_admin')->except(['input', 'all', 'show', 'save']);
+    }
+
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
@@ -50,9 +55,14 @@ class FeedbackController extends Controller
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function list()
+    public function all()
     {
         return view('feedback.all', ['feedbacks' => Feedback::paginate(3)]);
+    }
+
+    public function list()
+    {
+        return view('admin.feedbacks', ['feedbacks' => Feedback::paginate(3)]);
     }
 
     /**

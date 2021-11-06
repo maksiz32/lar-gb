@@ -8,12 +8,22 @@ use App\Http\Requests\OrderRequest;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('is_admin')->except(['index', 'create', 'save']);
+    }
+
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
         return view('orders.all', ['orders' => Order::paginate(3)]);
+    }
+
+    public function list()
+    {
+        return view('admin.orders', ['orders' => Order::paginate(3)]);
     }
 
     /**

@@ -6,6 +6,9 @@ use App\Http\Controllers\News\NewsController;
 use App\Http\Controllers\Feedback\FeedbackController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,13 +23,27 @@ use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('main');
 
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-//Route::resource('news', NewsController::class);
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/account', AccountController::class)->name('account');
+
+    Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'is_admin'], function () {
+        Route::get('/index', [AdminController::class, 'index'])->name('index');
+        Route::get('/users', [UserController::class, 'index'])->name('users');
+        Route::get('/user/{user}', [UserController::class, 'userEdit']);
+        Route::put('/user/save', [UserController::class, 'store'])->name('user');
+
+        Route::get('/categories', [CategoryController::class, 'list'])->name('categories');
+        Route::get('/orders', [OrderController::class, 'list'])->name('orders');
+        Route::get('/feedbacks', [FeedbackController::class, 'list'])->name('feedbacks');
+        Route::get('/news', [NewsController::class, 'list'])->name('news');
+    });
+});
 
 Route::prefix('/categories')->group(
     function () {
@@ -50,7 +67,7 @@ Route::prefix('/news')->group(
 
 Route::prefix('/feedback')->group(
     function () {
-        Route::get('/', [FeedbackController::class, 'list']);
+        Route::get('/', [FeedbackController::class, 'all']);
         Route::get('/show/{feedback}', [FeedbackController::class, 'show']);
         Route::get('/edit/{feedback}', [FeedbackController::class, 'edit']);
         Route::delete('/delete/{feedback}', [FeedbackController::class, 'destroy']);

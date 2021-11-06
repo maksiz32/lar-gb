@@ -4,16 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Http\Requests\CategoryRequest;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('is_admin')->except('categories');
+    }
+
     /**
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function categories()
     {
         return view('categories.index', ['categories' => Category::paginate(5)]);
+    }
+
+    public function list()
+    {
+        return view('admin.categories', ['categories' => Category::paginate(5)]);
     }
 
     /**
@@ -48,7 +57,7 @@ class CategoryController extends Controller
 
         if ($category->save()) {
 
-            return redirect((action([__CLASS__, 'categories'])))
+            return redirect((action([__CLASS__, 'list'])))
                 ->with(['message' => __('messages.admin.category.store.success')]);
         }
 

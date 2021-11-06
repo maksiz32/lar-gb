@@ -11,6 +11,16 @@ use Illuminate\Contracts\View\View;
 
 class NewsController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('is_admin')->except(['oneCategory', 'showOne', 'create', 'store']);
+    }
+
+    public function list()
+    {
+        return view('admin.news', ['news' => News::with(['category', 'source'])->paginate(4)]);
+    }
+
     /**
      * @param int $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|View
