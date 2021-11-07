@@ -52,7 +52,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://lar-gb'),
+    'url' => env('APP_URL', 'http://lar-gb.lc'),
 
     'asset_url' => env('ASSET_URL', null),
 

@@ -9,6 +9,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ParserController;
+use App\Http\Controllers\SocialAuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,6 +28,10 @@ Route::get('/', function () {
 })->name('main');
 
 Auth::routes();
+Route::group(['middleware' => 'guest'], function() {
+    Route::get('/facebook', [SocialAuthController::class, 'link'])->name('facebook');
+    Route::get('/facebook/callback', [SocialAuthController::class, 'callback'])->name('facebook.callback');
+});
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
@@ -82,3 +88,5 @@ Route::group(['prefix' => '/order', 'as' => 'order.'], function () {
     Route::put('/update', [OrderController::class, 'update'])->name('update');
     Route::post('/input', [OrderController::class, 'input'])->name('input');
 });
+
+Route::get('/valutas', ParserController::class);
