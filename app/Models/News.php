@@ -11,7 +11,7 @@ class News extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'text', 'author'];
+    protected $fillable = ['title', 'text', 'author', 'category_id', 'source_id'];
 
     public function category()
     {
@@ -21,24 +21,5 @@ class News extends Model
     public function source()
     {
         return $this->belongsTo(Source::class);
-    }
-
-    public static function getNewsByCategory(int $id)
-    {
-        /** @var Category $cat */
-        $cat = Category::query()->find($id);
-        $result = $cat->news()->get();
-
-        return [
-            'news' => $result,
-            'catName' => $cat->category,
-            ];
-    }
-
-    public static function oneNews(int $id)
-    {
-        $result = self::query()->find($id);
-
-        return $result;
     }
 }

@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Добавить новость')
+@section('title', 'Редактировать новость')
 
 @section('content')
 <article class="container">
@@ -7,6 +7,8 @@
         <div class="col-md-8">
             <form action="{{ route('news.input') }}" method="POST">
                 {{ csrf_field() }}
+                @method('PUT')
+                <input type="hidden" name="id" value="{{$news->id}}{{old('id')}}">
                 @if ($errors->any())
                     <div class="alert alert-danger">
                         <ul>
@@ -23,9 +25,7 @@
                         @foreach($categories as $cat)
                             <option
                                 value="{{ $cat->id }}"
-                                @isset($news)
                                 {{ $news->category_id === $cat->id ? 'selected' : ''}}
-                                @endisset
                             >{{ $cat->category }}</option>
                         @endforeach
                     </select>

@@ -2,7 +2,7 @@
 @section('title', "Главная страница")
 
 @section('content')
-    <div class="container lar-main">
+    <div class="container">
         <div class="row justify-content-center">
             @isset($message)
                 <div class="alert alert-success mt-3 mb-3">

@@ -5,33 +5,24 @@ namespace App\Http\Controllers\News;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\News;
+use App\Models\Source;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function categories()
-    {
-        return view('news.index', ['categories' => Category::getAllCategories()]);
-    }
-
     public function oneCategory(int $id)
     {
-        $result = News::getNewsByCategory($id);
-        $news = $result['news'];
-        $catName = $result['catName'];
+        /** @var Category $cat */
+        $cat = Category::find($id);
+        $result = $cat->news()->paginate(3);
 
-        return view('news.cat', ['news' => $news, 'catName' => $catName]);
-//        return view('news.cat', [...$result]);
+        return view('news.cat', ['news' => $result, 'catName' => $cat->category]);
     }
 
-    public function showOne(int $id)
+    public function showOne(News $news)
     {
-        return view('news.one', ['news' => News::oneNews($id)]);
+        $oneNews = News::query()->with(['category', 'source'])->find($news->id);
+        return view('news.one', ['news' => $oneNews]);
     }
 
     /**
@@ -41,7 +32,7 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('news.input', ['categories' => Category::getAllCategories()]);
+        return view('news.input', ['categories' => Category::all()]);
     }
 
     /**
@@ -54,36 +45,57 @@ class NewsController extends Controller
     {
         $validated = $request->validate(
             [
-                'categories' => 'required|string',
+                'id' => 'integer|exists:news,id',
                 'title' => 'required|string',
                 'textNews' => 'required|string',
+                'author' => 'required|string',
+                'categories' => 'integer|exists:categories,id',
+                'sourceId' => 'integer|exists:sources,id|nullable',
+                'sourceName' => 'required|string',
+                'sourcePath' => 'required|string',
             ]
         );
-        // Далее логика
-    }
+        $text = '';
 
+        $category = Category::find($validated['categories']);
+        $source_id = $validated['sourceId'] ?? null;
+        if (!$source_id) {
+            $source_id = Source::query()->create([
+                'name' => $validated['sourceName'],
+                'path' => $validated['sourcePath'],
+                                    ])->id;
+        }
+
+        if (!isset($validated['id'])) {
+            $news = new News();
+            $text = ' добавлена';
+        } else {
+            $news = News::find($validated['id']);
+            $text = ' изменена';
+        }
+        $news->title = $validated['title'];
+        $news->text = $validated['textNews'];
+        $news->author = $validated['author'];
+        $news->category_id = $category->id;
+        $news->source_id = $source_id;
+        $news->save();
+
+        return redirect(action([__CLASS__, 'oneCategory'], ['id' => $category->id]))
+            ->with(['message' => 'Новость <strong>' . $validated['title'] . '</strong>' . $text]);
+    }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\News  $news
+     * @param \App\Models\News $news
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function edit(News $news)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\News  $news
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, News $news)
-    {
-        //
+        $oneNews = News::query()->with('source')->find($news->id);
+        $categories = Category::all();
+        return view('news.edit', ['news' => $oneNews, 'categories' => $categories]);
     }
 
     /**
@@ -94,6 +106,11 @@ class NewsController extends Controller
      */
     public function destroy(News $news)
     {
-        //
+        $title = $news->title;
+        $catId = $news->category_id;
+        $news->delete();
+
+        return redirect(action([__CLASS__, 'oneCategory'], ['id' => $catId]))
+            ->with(['message' => "Новость <strong>$title</strong> удалена"]);
     }
 }
