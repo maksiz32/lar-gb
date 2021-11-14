@@ -11294,13 +11294,15 @@ textarea.form-control-lg {
     text-align: right;
 }
 
-footer.footer {
+.my-footer {
     background-color: #7c7f83;
     min-height: 3rem;
     align-content: center;
+    color: #fff;
+    font-weight: bolder;
 }
 
-div.hovered:hover {
+.hovered:hover {
     background-color: black;
     color: #fff;
 }

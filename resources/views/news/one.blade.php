@@ -5,7 +5,7 @@
     <div class="container lar-main">
         <div class="row justify-content-center">
             <div class="card m-2" style="width: 38rem;">
-                <div class="card-body hovered">
+                <div class="card-body">
                     <h5 class="card-title">{{ $news[0]['title'] }}</h5>
                     <p class="card-text">
                         {{ $news[0]['text'] }}
