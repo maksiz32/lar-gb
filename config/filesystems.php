@@ -42,6 +42,11 @@ return [
             'visibility' => 'public',
         ],
 
+        'my_files' => [
+            'driver' => 'local',
+            'root'   => public_path() . '/files',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

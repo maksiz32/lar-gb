@@ -11,14 +11,43 @@
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">{{ __('Главная') }}</a>
+                    <a
+                        class="nav-link @if(request()->route('/')) active @endif"
+                        href="/">
+                        {{ __('Главная') }}
+                    </a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">{{ __('Новости') }}</a>
+                    <a
+                        class="nav-link dropdown-toggle @if(request()->routeIs('news.*')) active @endif"
+                        data-bs-toggle="dropdown"
+                        href="#" role="button"
+                        aria-expanded="false">
+                        {{ __('Новости') }}
+                    </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/news">{{ __('Категории новостей') }}</a></li>
                         <li><a class="dropdown-item" href="/news/create">{{ __('Добавить новость') }}</a></li>
                     </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle @if(request()->routeIs('feedback.*')) active @endif"
+                        data-bs-toggle="dropdown"
+                        href="#" role="button"
+                        aria-expanded="false">
+                        {{ __('Отзывы') }}
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/feedback">{{ __('Добавить отзыв / комментарий') }}</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a
+                        class="nav-link @if(request()->routeIs('order')) active @endif"
+                        href="/order">
+                        {{ __('Заказать') }}
+                    </a>
                 </li>
             </ul>
         </div>
