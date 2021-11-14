@@ -27,6 +27,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="/categories">{{ __('Категории новостей') }}</a></li>
+                        <li><a class="dropdown-item" href="/valutas">{{ __('Курсы валют') }}</a></li>
                         <li><a class="dropdown-item" href="/news/create">{{ __('Добавить новость') }}</a></li>
                     </ul>
                 </li>
