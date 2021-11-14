@@ -21,7 +21,7 @@
                     <select name="categories" required>
                         <option disabled>Тип объекта:</option>
                         @foreach($categories as $cat)
-                            <option value="{{ $cat }}">{{ $cat }}</option>
+                            <option value="{{ $cat->id }}">{{ $cat->category }}</option>
                         @endforeach
                     </select>
                 </div>

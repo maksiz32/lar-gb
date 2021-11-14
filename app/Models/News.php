@@ -11,40 +11,33 @@ class News extends Model
 {
     use HasFactory;
 
-    public static function getCountNews(int $countNews): array
+    protected $fillable = ['title', 'text', 'author'];
+
+    public function category()
     {
-        return (new FactoryNews())->getAllNews($countNews);
+        return $this->belongsTo(Category::class);
     }
 
-    public static function getAllCategories(): array
+    public function source()
     {
-        return (new FactoryNews())->getCategories();
+        return $this->belongsTo(Source::class);
     }
 
-    public static function getNewsByCategory(string $nameCategory): array
+    public static function getNewsByCategory(int $id)
     {
-        $result = [];
-        $arrNews = self::getCountNews(20);
+        /** @var Category $cat */
+        $cat = Category::query()->find($id);
+        $result = $cat->news()->get();
 
-        $result = array_filter($arrNews, function($i) use ($nameCategory) {
-            if ($i['category'] === $nameCategory) {
-                return $i;
-            }
-        });
-        $result = array_values($result);
-        return $result;
+        return [
+            'news' => $result,
+            'catName' => $cat->category,
+            ];
     }
 
-    public static function oneNews(int $id): array
+    public static function oneNews(int $id)
     {
-        $arrNews = self::getCountNews(20);
-
-        $result = array_filter($arrNews, function($i) use ($id) {
-            if ($i['id'] === $id) {
-                return $i;
-            }
-        });
-        $result = array_values($result);
+        $result = self::query()->find($id);
 
         return $result;
     }
