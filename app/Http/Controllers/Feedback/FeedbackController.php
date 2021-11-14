@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Feedback;
 
 use App\Http\Controllers\Controller;
 use App\Models\Feedback;
-use Illuminate\Http\Request;
+use App\Http\Requests\FeedbackRequest;
 
 class FeedbackController extends Controller
 {
-    public function input(Request $request)
+    public function input()
     {
         return view('feedback.input');
     }
@@ -18,29 +18,25 @@ class FeedbackController extends Controller
         return view('feedback.edit', ['feedback' => $feedback]);
     }
 
-    public function save(Request $request)
+    public function save(FeedbackRequest $request)
     {
-        $validated = $request->validate(
-            [
-                'id' => 'integer|exists:feedbacks,id',
-                'user_name' => 'required|string',
-                'comment' => 'required|string',
-            ]
-        );
         $text = '';
-        if(!isset($validated['id'])) {
-            $feed = new Feedback();
+        if(!isset($request->id)) {
+            $feedback = new Feedback();
             $text = 'добавлен';
         } else {
-            $feed = Feedback::find($validated['id']);
+            $feedback = Feedback::findOrFail($request->id);
             $text = 'изменён';
         }
-        $feed->user_name = $validated['user_name'];
-        $feed->comment = $validated['comment'];
-        $feed->save();
+        $feedback->user_name = $request->user_name;
+        $feedback->comment = $request->comment;
 
-        return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
-            ->with(['message' => "Отзыв от {$feed->user_name} {$text}"]);
+        if ($feedback->save()) {
+            return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
+                ->with(['message' => "Отзыв от {$feedback->user_name} {$text}"]);
+        } else {
+            return back()->with(['errors' => "Ошибка при сохранении"]);
+        }
     }
 
     public function list()

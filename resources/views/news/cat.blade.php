@@ -2,11 +2,11 @@
 @section('title', "Новости из категории $catName")
 
 @section('content')
-    @isset($message)
+    @if(session()->get('message'))
         <div class="alert alert-success mt-3 mb-3">
-            {!! $message !!}
+            {!! session()->get('message') !!}
         </div>
-    @endisset
+    @endif
     @empty($news)
         <div class="alert alert-warning" role="alert">
             Нет записей в данной категории
@@ -23,6 +23,9 @@
                             <p class="card-text">
                                 {{ $one->text }}
                             </p>
+                        </div>
+                        <div class="card-footer small text-end">
+                            <i>{{ $one->created_at->format('d.m.Y') }}</i>
                         </div>
                     </div>
                 </a>

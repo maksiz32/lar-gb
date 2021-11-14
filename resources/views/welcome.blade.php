@@ -4,11 +4,11 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            @isset($message)
+            @if(session()->get('message'))
                 <div class="alert alert-success mt-3 mb-3">
-                    {{ $message }}
+                    {!! session()->get('message') !!}
                 </div>
-            @endisset
+            @endif
             <h1>Laravel. Глубокое погружение</h1>
         </div>
         <div class="justify-content-end align-bottom lar-main__name">
