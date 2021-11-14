@@ -11286,3 +11286,22 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.lar-main {
+    min-height: 55vh;
+}
+
+.lar-main__name {
+    text-align: right;
+}
+
+footer.footer {
+    background-color: #7c7f83;
+    min-height: 3rem;
+    align-content: center;
+}
+
+div.hovered:hover {
+    background-color: black;
+    color: #fff;
+}
+
