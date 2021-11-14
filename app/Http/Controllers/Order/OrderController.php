@@ -8,48 +8,87 @@ use App\Http\Requests\OrderRequest;
 
 class OrderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('is_admin')->except(['index', 'create', 'save']);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function index()
     {
         return view('orders.all', ['orders' => Order::paginate(3)]);
     }
 
+    public function list()
+    {
+        return view('admin.orders', ['orders' => Order::paginate(3)]);
+    }
+
+    /**
+     * @param Order $order
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function edit(Order $order)
     {
         return view('orders.edit', ['order' => $order]);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function create()
     {
         return view('orders.input');
     }
 
-    public function save(OrderRequest $request)
+    /**
+     * @param OrderRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function input(OrderRequest $request)
     {
-        if (isset($request->id)) {
-            $order = Order::find($request->id);
-        } else {
-            $order = new Order();
-        }
-        $order->name = $request->name;
-        $order->phone = $request->phone;
-        $order->email = $request->email;
-        $order->order = $request->order;
+        $order = Order::create($request->validated());
 
         if ($order->save()) {
             return redirect(action([__CLASS__, 'index']))
-                ->with(['message' => "Заказ от {$order->name} успешно создан"]);
-        } else {
-            return back()->with(['errors' => 'Ошибка сохранения']);
+                ->with(['message' => __('messages.admin.order.input.success')]);
         }
+
+        return back()->with(['errors' => __('messages.admin.order.input.fail')]);
     }
 
-    public function destroy(int $id)
+    /**
+     * @param OrderRequest $request
+     * @param Order $order
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(OrderRequest $request, Order $order)
     {
-        $order = Order::findOrFail($id);
-        $user_name = $order->name;
-        $order->delete();
+        $order = $order->fill($request->validated());
+        if ($order->save()) {
+            return redirect(action([__CLASS__, 'index']))
+                ->with(['message' => __('messages.admin.order.update.success')]);
+        }
 
-        return redirect(action([__CLASS__, 'index']))
-            ->with(['message' => "Заказ от {$user_name} удалён"]);
+        return back()->with(['errors' => __('messages.admin.order.update.fail')]);
+    }
+
+    /**
+     * @param Order $order
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Order $order)
+    {
+        try {
+            $order->delete();
+
+            return response()->json(['message' => __('messages.admin.order.destroy.success')]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage() . PHP_EOL, $e->getTrace());
+
+            return response()->json(['message' => __('messages.admin.order.destroy.fail')]);
+        }
     }
 }

@@ -11286,6 +11286,14 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+#admin-panel {
+    display: flex !important;
+}
+
+.admin-panel-left-nav {
+    max-width: 20%;
+}
+
 .lar-main {
     min-height: 55vh;
 }

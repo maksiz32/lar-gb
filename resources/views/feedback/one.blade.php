@@ -15,20 +15,6 @@
                         </small>
                             {{"Автор: $feedback->user_name "}}
                     </div>
-                    <div class="card-footer">
-                        <a
-                            class="btn btn-dark"
-                            href="{{ url('/feedback/edit/' . $feedback->id) }}"
-                        >
-                            Редактировать
-                        </a>
-                        <a
-                            class="btn btn-light"
-                            style="border: 1px solid black"
-                            href="{{ url('/feedback/delete/' . $feedback->id) }}">
-                            Удалить
-                        </a>
-                    </div>
                 </div>
             </div>
         </div>

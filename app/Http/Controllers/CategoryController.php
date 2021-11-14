@@ -4,57 +4,87 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Http\Requests\CategoryRequest;
-use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('is_admin')->except('categories');
+    }
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function categories()
     {
         return view('categories.index', ['categories' => Category::paginate(5)]);
     }
 
+    public function list()
+    {
+        return view('admin.categories', ['categories' => Category::paginate(5)]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function create()
     {
         return view('categories.input');
     }
 
+    /**
+     * @param Category $category
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function edit(Category $category)
     {
         return view('categories.edit', ['category' => $category]);
     }
 
-    public function store(CategoryRequest $request)
+    /**
+     * @param CategoryRequest $request
+     * @param Category $category
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function store(CategoryRequest $request, Category $category)
     {
-        if(isset($request->id)) {
-            $category = Category::findOrFail($request->id);
-        } else {
-            $category = new Category();
-        }
-        $category->category = $request->category;
-
+        $category = $category->fill($request->validated());
         if ($category->save()) {
-            return redirect((action([__CLASS__, 'categories'])))
-                ->with(['message' => "Категория <strong>$category->category</strong> изменена"]);
-        } else {
-            return back()->with(['errors' => 'Ошибка при сохранении']);
+
+            return redirect((action([__CLASS__, 'list'])))
+                ->with(['message' => __('messages.admin.category.store.success')]);
         }
+
+        return back()->with(['errors' => __('messages.admin.category.store.fail')]);
     }
 
-    public function destroy(Request $request)
+    public function input(CategoryRequest $request)
     {
-        $validated = $request->validate([
-            'id' => 'required|integer|exists:categories,id',
-                                        ]);
-        $category = Category::findOrFail($validated['id']);
-        $name = $category->category;
-        $category->delete();
+        $category = Category::create($request->validated());
+        if ($category->save()) {
 
-        return redirect((action([__CLASS__, 'categories'])))
-            ->with(['message' => "Категория <strong>$name</strong> удалена"]);
+            return redirect((action([__CLASS__, 'list'])))
+                ->with(['message' => __('messages.admin.category.input.success')]);
+        }
+
+        return back()->with(['errors' => __('messages.admin.category.input.fail')]);
+    }
+
+    /**
+     * @param Category $category
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy(Category $category)
+    {
+        try {
+            $category->delete();
+
+            return response()->json(['message' => __('messages.admin.category.destroy.success')]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage() . PHP_EOL, $e->getTrace());
+
+            return response()->json(['message' => __('messages.admin.category.destroy.fail')]);
+        }
     }
 }

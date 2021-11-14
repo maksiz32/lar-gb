@@ -5,12 +5,11 @@
     <article class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form action="{{ action([\App\Http\Controllers\CategoryController::class, 'store']) }}" method="POST">
+                <form action="{{ route('categories.update') }}" method="POST">
                     {{ csrf_field() }}
-                    @isset($category->id)
-                        @method('PUT')
-                        <input type="hidden" value="{{ $category->id }}" name="id">
-                    @endisset
+                    @method('PUT')
+                    <input type="hidden" value="{{ old('id', $category->id) }}" name="id">
+
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -26,7 +25,7 @@
                             type="text"
                             class="form-control"
                             name="category"
-                            value="@isset($category->category){{ $category->category }}@endisset{{old('category')}}"
+                            value="{{old('category', $category->category)}}"
                             required
                         >
                     </div>

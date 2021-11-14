@@ -47,7 +47,8 @@
                     <a
                         class="nav-link dropdown-toggle @if(request()->routeIs('order')) active @endif"
                         data-bs-toggle="dropdown"
-                        href="#" role="button"
+                        href="#"
+                        role="button"
                         aria-expanded="false">
                         {{ __('Заказать') }}
                     </a>
@@ -58,7 +59,7 @@
                 </li>
             </ul>
         </div>
-        <div class="d-flex">
+        <ul class="d-flex">
 
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ml-auto">
@@ -77,21 +78,36 @@
                     @endif
                 @else
                     <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <a
+                            class="nav-link dropdown-toggle"
+                            data-bs-toggle="dropdown"
+                            href="#"
+                            role="button"
+                            aria-expanded="false"
+                        >
                             {{ Auth::user()->name }}
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                               onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                {{ __('Logout') }}
-                            </a>
+                        <ul class="dropdown-menu">
+                            @if(Auth::user()->role_id === 1)
+                            <li>
+                                <a class="dropdown-item" href="{{ route('admin.index') }}">
+                                    {{ __('Админка') }}
+                                </a>
+                            </li>
+                            @endif
+                            <li>
+                                <a class="dropdown-item" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
+                                </a>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </div>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </li>
+                        </ul>
                     </li>
                 @endguest
             </ul>

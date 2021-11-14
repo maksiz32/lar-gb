@@ -8,7 +8,7 @@
                 <form action="{{ route('order.save') }}" method="POST">
                     {{ csrf_field() }}
                     @method('PUT')
-                    <input type="hidden" name="id" value="{{ $order->id }}">
+                    <input type="hidden" name="id" value="{{ old('id', $order->id) }}">
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -26,7 +26,7 @@
                             id="name"
                             class="form-control"
                             name="name"
-                            value="{{ $order->name }}{{ old('name') }}"
+                            value="{{ old('name', $order->name) }}"
                             required
                         >
                     </div>
@@ -37,7 +37,7 @@
                             id="phone"
                             class="form-control"
                             name="phone"
-                            value="{{ $order->phone }}{{ old('phone') }}"
+                            value="{{ old('phone', $order->phone) }}"
                             required
                         >
                     </div>
@@ -48,7 +48,7 @@
                             id="email"
                             class="form-control"
                             name="email"
-                            value="{{ $order->email }}{{ old('email') }}"
+                            value="{{ old('email', $order->email) }}"
                             required
                         >
                     </div>
@@ -60,7 +60,7 @@
                             class="form-control"
                             name="order"
                             required
-                        >{{ $order->order }}{{ old('order') }}
+                        >{{ old('order', $order->order) }}
                         </textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">

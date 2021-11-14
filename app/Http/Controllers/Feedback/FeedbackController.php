@@ -8,53 +8,95 @@ use App\Http\Requests\FeedbackRequest;
 
 class FeedbackController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('is_admin')->except(['input', 'all', 'show', 'save']);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function input()
     {
         return view('feedback.input');
     }
 
+    /**
+     * @param Feedback $feedback
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function edit(Feedback $feedback)
     {
         return view('feedback.edit', ['feedback' => $feedback]);
     }
 
-    public function save(FeedbackRequest $request)
+    /**
+     * @param FeedbackRequest $request
+     * @param Feedback $feedback
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function update(FeedbackRequest $request, Feedback $feedback)
     {
-        $text = '';
-        if(!isset($request->id)) {
-            $feedback = new Feedback();
-            $text = 'добавлен';
-        } else {
-            $feedback = Feedback::findOrFail($request->id);
-            $text = 'изменён';
-        }
-        $feedback->user_name = $request->user_name;
-        $feedback->comment = $request->comment;
-
+        $feedback = $feedback->fill($request->validated());
         if ($feedback->save()) {
             return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
-                ->with(['message' => "Отзыв от {$feedback->user_name} {$text}"]);
-        } else {
-            return back()->with(['errors' => "Ошибка при сохранении"]);
+                ->with(['message' => __('messages.admin.feedback.update.success')]);
         }
+
+        return back()->with(['errors' => __('messages.admin.feedback.update.fail')]);
     }
 
-    public function list()
+    /**
+     * @param FeedbackRequest $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function create(FeedbackRequest $request)
+    {
+        $feedback = Feedback::create($request->validated());
+        if ($feedback->save()) {
+            return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::all()]))
+                ->with(['message' => __('messages.admin.feedback.create.success')]);
+        }
+
+        return back()->with(['errors' => __('messages.admin.feedback.create.fail')]);
+    }
+
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function all()
     {
         return view('feedback.all', ['feedbacks' => Feedback::paginate(3)]);
     }
 
+    public function list()
+    {
+        return view('admin.feedbacks', ['feedbacks' => Feedback::paginate(3)]);
+    }
+
+    /**
+     * @param Feedback $feedback
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function show(Feedback $feedback)
     {
         return view('feedback.one', ['feedback' => $feedback]);
     }
 
+    /**
+     * @param Feedback $feedback
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function destroy(Feedback $feedback)
     {
-        $name = $feedback->user_name;
-        $feedback->delete();
+        try {
+            $feedback->delete();
 
-        return redirect(action([__CLASS__, 'list'], ['feedbacks' => Feedback::paginate(3)]))
-            ->with(['message' => "Отзыв от <strong>$name</strong> удалён"]);
+            return response()->json(['message' => __('messages.admin.feedback.destroy.success')]);
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage() . PHP_EOL, $e->getTrace());
+
+            return response()->json(['message' => __('messages.admin.feedback.destroy.fail')]);
+        }
     }
 }

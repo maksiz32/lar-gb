@@ -5,7 +5,7 @@
     <article class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <form action="{{ route('order.save') }}" method="POST">
+                <form action="{{ route('order.input') }}" method="POST">
                     {{ csrf_field() }}
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -58,8 +58,7 @@
                             class="form-control"
                             name="order"
                             required
-                        >
-                            {{old('order')}}
+                        >{{ old('order') }}
                         </textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">
