@@ -48,6 +48,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/orders', [OrderController::class, 'list'])->name('orders');
         Route::get('/feedbacks', [FeedbackController::class, 'list'])->name('feedbacks');
         Route::get('/news', [NewsController::class, 'list'])->name('news');
+        Route::get('/parse', [ParserController::class, 'list'])->name('parse');
     });
 });
 
@@ -89,4 +90,11 @@ Route::group(['prefix' => '/order', 'as' => 'order.'], function () {
     Route::post('/input', [OrderController::class, 'input'])->name('input');
 });
 
-Route::get('/valutas', ParserController::class);
+Route::group(['prefix' => '/parse', 'as' => 'parse.'], function () {
+    Route::get('/valutas', [ParserController::class, 'valutas'])->name('valutas');
+    Route::get('/create', [ParserController::class, 'create'])->name('create');
+    Route::post('/input', [ParserController::class, 'input'])->name('input');
+    Route::get('/edit/{resource}', [ParserController::class, 'edit'])->name('edit');
+    Route::put('/update', [ParserController::class, 'update'])->name('update');
+    Route::delete('/delete/{resource}', [ParserController::class, 'destroy']);
+});

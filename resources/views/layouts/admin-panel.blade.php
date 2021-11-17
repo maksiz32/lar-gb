@@ -11,6 +11,7 @@
                     <a class="nav-link" href="{{ route('admin.feedbacks') }}">Отзывы</a>
                     <a class="nav-link" href="{{ route('admin.orders') }}">Заказы</a>
                     <a class="nav-link" href="{{ route('admin.users') }}">Пользователи</a>
+                    <a class="nav-link" href="{{ route('admin.parse') }}">Ресурсы для парсинга</a>
                 </nav>
             </div>
             <div class="admin-panel-main" style="min-width: 60%; margin: 0 auto">

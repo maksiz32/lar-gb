@@ -32,7 +32,7 @@ class UserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'required' => 'Поле :attrubute обязательно для заполнения',
+            'required' => 'Поле :attribute обязательно для заполнения',
             'integer' => 'Значение :attribute может быть только числом',
             'numeric' => 'Значение :attribute может быть только числом',
             'exists' => 'Передано несуществующее значение :attribute',

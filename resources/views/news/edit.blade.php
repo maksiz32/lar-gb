@@ -96,3 +96,13 @@
     </div>
 </article>
 @endsection
+@push('js')
+    <script src="{{asset('ckeditor/ckeditor.js')}}"></script>
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#textNews' ))
+            .catch( error => {
+                console.log( error );
+            } );
+    </script>
+@endpush
