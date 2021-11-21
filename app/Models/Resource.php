@@ -10,4 +10,9 @@ class Resource extends Model
     use HasFactory;
 
     protected $fillable = ['path', 'title'];
+
+    public function news()
+    {
+        return $this->hasMany(News::class);
+    }
 }

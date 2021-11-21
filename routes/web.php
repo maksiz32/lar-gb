@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/feedbacks', [FeedbackController::class, 'list'])->name('feedbacks');
         Route::get('/news', [NewsController::class, 'list'])->name('news');
         Route::get('/parse', [ParserController::class, 'list'])->name('parse');
+        Route::get('/yandex-parse', [ParserController::class, 'yandexParse']);
     });
 });
 
@@ -97,4 +98,10 @@ Route::group(['prefix' => '/parse', 'as' => 'parse.'], function () {
     Route::get('/edit/{resource}', [ParserController::class, 'edit'])->name('edit');
     Route::put('/update', [ParserController::class, 'update'])->name('update');
     Route::delete('/delete/{resource}', [ParserController::class, 'destroy']);
+
+    Route::get('/yandex', [ParserController::class, 'yandex']);
+});
+
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['auth']], function () {
+    \Unisharp\Laravelfilemanager\Lfm::routes();
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ResourceRequest;
 use App\Models\Resource;
 use App\Services\ValutasParser;
+use App\Services\YandexParser;
 
 class ParserController extends Controller
 {
@@ -91,5 +92,10 @@ class ParserController extends Controller
 
             return response()->json(['message' => __('messages.admin.resource.destroy.fail')]);
         }
+    }
+
+    public function yandexParse(YandexParser $parser)
+    {
+        $parser->parseYandexNews();
     }
 }

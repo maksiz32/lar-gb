@@ -64,14 +64,14 @@
                     >
                 </div>
                 <div class="form-group">
-                    <input type="hidden" name="sourceId" value="{{ old('sourceId', $news->source->id)}}">
+                    <input type="hidden" name="sourceId" value="{{ old('sourceId', $news->resource->id)}}">
                     <label for="sourceName" class="col-md-4 control-label">Источник новостей:</label>
                     <input
                         type="text"
                         id="sourceName"
                         class="form-control"
                         name="sourceName"
-                        value="{{ old('sourceName', $news->source->name)}}"
+                        value="{{ old('sourceName', $news->resource->title)}}"
                         required
                     >
                     <input
@@ -79,7 +79,7 @@
                         id="sourcePath"
                         class="form-control"
                         name="sourcePath"
-                        value="@isset($news->source->path){{ $news->source->path }}@else{{__('http://lar-gb')}}@endisset"
+                        value="@isset($news->resource->path){{ $news->resource->path }}@else{{__('http://lar-gb')}}@endisset"
                         required
                     >
                 </div>
@@ -99,8 +99,14 @@
 @push('js')
     <script src="{{asset('ckeditor/ckeditor.js')}}"></script>
     <script>
+        var options = {
+            filebrowserImageBrowseUrl: '/laravel-filemanager?type=Images',
+            filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token=',
+            filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+            filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token='
+        };
         ClassicEditor
-            .create( document.querySelector( '#textNews' ))
+            .create( document.querySelector( '#textNews' ), options)
             .catch( error => {
                 console.log( error );
             } );

@@ -14,12 +14,12 @@
                         </p>
                     </h5>
                     <p class="card-text">
-                        {{ $news->text }}
+                        {!! $news->text !!}
                     </p>
                     <hr/>
                     <div class="card-subtitle">
                         {{"Автор: $news->author "}}
-                        @isset($news->source){{"Ресурс: {$news->source->name} ({$news->source->path}) "}}@endisset
+                        @isset($news->resource){{"Ресурс: {$news->resource->title} ({$news->resource->path}) "}}@endisset
                         @isset($news->category){{"Категория: {$news->category->category}"}}@endisset
                     </div>
                     <div class="card-footer">
