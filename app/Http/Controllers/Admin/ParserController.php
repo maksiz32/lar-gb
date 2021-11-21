@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResourceRequest;
+use App\Jobs\NewsJob;
 use App\Models\Resource;
 use App\Services\ValutasParser;
-use App\Services\YandexParser;
 
 class ParserController extends Controller
 {
@@ -94,8 +94,13 @@ class ParserController extends Controller
         }
     }
 
-    public function yandexParse(YandexParser $parser)
+    public function yandexParse()
     {
-        $parser->parseYandexNews();
+        // Перебираем ресурсы для парсинга из БД
+        $newsResources = Resource::get();
+        foreach ($newsResources as $resource) {
+            dispatch(new NewsJob($resource));
+        }
+        echo "Запросы запущены, дождитесь сообщения по электронной почте.";
     }
 }
