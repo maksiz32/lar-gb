@@ -5,7 +5,7 @@ namespace App\Http\Controllers\News;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\News;
-use App\Models\Source;
+use App\Models\Resource;
 use App\Http\Requests\NewsRequest;
 use Illuminate\Contracts\View\View;
 
@@ -18,7 +18,7 @@ class NewsController extends Controller
 
     public function list()
     {
-        return view('admin.news', ['news' => News::with(['category', 'source'])->paginate(4)]);
+        return view('admin.news', ['news' => News::with(['category', 'resource'])->paginate(4)]);
     }
 
     /**
@@ -40,7 +40,7 @@ class NewsController extends Controller
      */
     public function showOne(News $news)
     {
-        $oneNews = News::query()->with(['category', 'source'])->find($news->id);
+        $oneNews = News::query()->with(['category', 'resource'])->find($news->id);
 
         return view('news.one', ['news' => $oneNews]);
     }
@@ -62,8 +62,8 @@ class NewsController extends Controller
     {
         $source_id = $request->sourceId ?? null;
         if (!$source_id) {
-            $source_id = Source::create([
-                'name' => $request->sourceName,
+            $source_id = Resource::create([
+                'title' => $request->sourceName,
                 'path' => $request->sourcePath,
                                     ])->id;
         }
@@ -88,7 +88,7 @@ class NewsController extends Controller
     {
         $source_id = $request->sourceId ?? null;
         if (!$source_id) {
-            $source_id = Source::create([
+            $source_id = Resource::create([
                                             'name' => $request->sourceName,
                                             'path' => $request->sourcePath,
                                         ])->id;
@@ -111,7 +111,7 @@ class NewsController extends Controller
      */
     public function edit(News $news)
     {
-        $oneNews = News::with('source')->find($news->id);
+        $oneNews = News::with('resource')->find($news->id);
         $categories = Category::all();
 
         return view('news.edit', ['news' => $oneNews, 'categories' => $categories]);
@@ -124,6 +124,8 @@ class NewsController extends Controller
     public function destroy(News $news)
     {
         try {
+            $resource = Resource::where('id', $news->resource_id)->first();
+            $resource->delete();
             $news->delete();
 
             return response()->json(['message' => __('messages.admin.news.destroy.success')]);

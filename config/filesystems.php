@@ -44,7 +44,7 @@ return [
 
         'my_files' => [
             'driver' => 'local',
-            'root'   => public_path() . '/files',
+            'root'   => storage_path('app/files'),
         ],
 
         's3' => [

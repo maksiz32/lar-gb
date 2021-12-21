@@ -39,6 +39,7 @@ class ValutasParser
      */
     private function getArrayCoursesCode(): array
     {
+        // TODO Сделать через коллекцию
         return array_map(function($value) {
                 return $value['numCode'];
             }, self::VALUTAS_CODES);
@@ -59,6 +60,7 @@ class ValutasParser
                     ]
                 ]);
 
+        // TODO Если в предыдущем сделать через коллекцию, то и здесь изменить на методы коллекции
         $resultCoursesArray = array_filter($data['title'], function($v, $k) {
                 return in_array($v['NumCode'], $this->getArrayCoursesCode(), false);
             }, ARRAY_FILTER_USE_BOTH);

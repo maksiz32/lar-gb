@@ -19,7 +19,6 @@ class Social
             }
         }
 
-        return redirect(route('register'));
-//        throw new \Exception('Пользователь не найден');
+        return route('register');
     }
 }

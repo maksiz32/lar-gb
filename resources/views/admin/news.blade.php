@@ -34,8 +34,8 @@
                         <td>{{ $new->text }}</td>
                         <td>{{ $new->author }}</td>
                         <td>{{ $new->category->category }}</td>
-                        <td>{{ $new->source->name }}</td>
-                        <td>{{ $new->source->path }}</td>
+                        <td>{{ $new->resource->title }}</td>
+                        <td>{{ $new->resource->path }}</td>
                         <td>{{ __($new->created_at->format('d.m.Y H:i')) }}</td>
                         <td>
                             <a href="{{ '/news/edit/' . $new->id }}">
